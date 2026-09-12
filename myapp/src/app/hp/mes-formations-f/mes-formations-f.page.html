@@ -1,0 +1,217 @@
+<ion-header [translucent]="true" class="mf-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/hamza" text="" (click)="closemodal()"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      <ion-icon name="person-video3-outline"></ion-icon>
+      Mes formations
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="toggleSearch()">
+        <ion-icon name="search-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <div class="mf-search-bar" *ngIf="searchOpen">
+    <ion-icon name="search-outline"></ion-icon>
+    <input type="text" placeholder="Rechercher..." [(ngModel)]="searchText" />
+    <ion-icon name="close-outline" (click)="toggleSearch()"></ion-icon>
+  </div>
+</ion-header>
+
+<ion-content class="mf-content">
+  <div class="ion-text-center ion-padding" *ngIf="loading">
+    <ion-spinner></ion-spinner>
+  </div>
+
+  <ng-container *ngIf="!loading">
+
+    <!-- Tab bar -->
+    <div class="mf-tabs">
+      <button class="mf-tab" [class.active]="activeTab === 'affectations'" (click)="setTab('affectations')">
+        Mes affectations <span class="mf-tab-count">{{ affectationsCount }}</span>
+      </button>
+      <button class="mf-tab" [class.active]="activeTab === 'demandes'" (click)="setTab('demandes')">
+        Mes demandes <span class="mf-tab-count">{{ demandes.length }}</span>
+      </button>
+      <button class="mf-tab" [class.active]="activeTab === 'disponibles'" (click)="setTab('disponibles')">
+        Formations disponibles <span class="mf-tab-count">{{ formations.length }}</span>
+      </button>
+    </div>
+
+    <!-- ===================== Mes affectations ===================== -->
+    <ng-container *ngIf="activeTab === 'affectations'">
+
+      <div class="mf-exp-card" *ngFor="let f of filteredFormationsAssignees">
+        <div class="mf-exp-head" (click)="toggleFormation(f.id)">
+          <div class="mf-icon"><ion-icon name="school-outline"></ion-icon></div>
+          <div class="mf-text">
+            <h4>{{ f.intitule }}</h4>
+            <span class="mf-pill mf-pill-ok"><ion-icon name="checkmark-circle"></ion-icon> Formation entière</span>
+            <div class="mf-stats-row">
+              <span class="mf-stat"><ion-icon name="book-outline"></ion-icon> {{ moduleCount(f.id) }} modules</span>
+              <span class="mf-stat"><ion-icon name="bar-chart-outline"></ion-icon> {{ progressPct(f.id) }}% complétés</span>
+            </div>
+          </div>
+          <ion-icon class="mf-chevron" [name]="expandedFormations[f.id] ? 'chevron-up-outline' : 'chevron-down-outline'"></ion-icon>
+        </div>
+
+        <div class="mf-exp-body" *ngIf="expandedFormations[f.id]">
+          <div class="mf-modules-label">
+            <span>Modules</span>
+            <a class="mf-voir-tout" *ngIf="moduleCount(f.id) > 3" (click)="toggleVoirTout(f.id, $event)">
+              {{ showAllModules[f.id] ? 'Réduire' : 'Voir tout (' + moduleCount(f.id) + ')' }}
+            </a>
+          </div>
+
+          <div class="mf-pres-row" *ngFor="let m of visibleModules(f.id)">
+            <ion-icon class="mf-pres-status"
+                      [class.ok]="presenceInfo(m.id).hasPresence"
+                      [name]="presenceInfo(m.id).hasPresence ? 'checkmark-circle' : 'time-outline'"></ion-icon>
+            <span class="mf-pres-name">{{ m.nom }}</span>
+            <div class="mf-pres-meta">
+              <ng-container *ngIf="presenceInfo(m.id).hasPresence; else noPresF">
+                <span class="mf-pres-ok">Présence enregistrée</span>
+                <span class="mf-pres-date"><ion-icon name="calendar-outline"></ion-icon> {{ presenceInfo(m.id).lastDate | date:'dd/MM/yyyy' }}</span>
+              </ng-container>
+              <ng-template #noPresF><span class="mf-pres-none">Aucune présence</span></ng-template>
+            </div>
+            <ion-icon class="mf-row-chevron" name="chevron-forward-outline"></ion-icon>
+          </div>
+
+          <a class="mf-details-link" routerLink="/contact">
+            <ion-icon name="list-outline"></ion-icon>
+            Voir les détails de la formation
+          </a>
+        </div>
+      </div>
+
+      <div class="mf-exp-card mf-exp-card-simple" *ngFor="let m of filteredModulesAssignes">
+        <div class="mf-exp-head" (click)="toggleModule(m.id)">
+          <div class="mf-icon"><ion-icon name="book-outline"></ion-icon></div>
+          <div class="mf-text">
+            <h4>{{ m.nom }}</h4>
+            <p class="mf-sub">{{ formationById(m.formation_id)?.intitule }}</p>
+            <span class="mf-pill mf-pill-module"><ion-icon name="bookmark-outline"></ion-icon> Module</span>
+          </div>
+          <ion-icon class="mf-chevron" [name]="expandedModules[m.id] ? 'chevron-up-outline' : 'chevron-down-outline'"></ion-icon>
+        </div>
+
+        <div class="mf-exp-body" *ngIf="expandedModules[m.id]">
+          <div class="mf-pres-row mf-pres-row-solo">
+            <ion-icon class="mf-pres-status"
+                      [class.ok]="presenceInfo(m.id).hasPresence"
+                      [name]="presenceInfo(m.id).hasPresence ? 'checkmark-circle' : 'time-outline'"></ion-icon>
+            <ng-container *ngIf="presenceInfo(m.id).hasPresence; else noPresM">
+              <span class="mf-pres-ok">Présence enregistrée</span>
+              <span class="mf-pres-date"><ion-icon name="calendar-outline"></ion-icon> {{ presenceInfo(m.id).lastDate | date:'dd/MM/yyyy' }}</span>
+            </ng-container>
+            <ng-template #noPresM><span class="mf-pres-none">Aucune présence</span></ng-template>
+          </div>
+        </div>
+      </div>
+
+      <p class="mf-empty" *ngIf="!filteredFormationsAssignees.length && !filteredModulesAssignes.length">
+        Aucune affectation pour le moment.
+      </p>
+    </ng-container>
+
+    <!-- ===================== Mes demandes ===================== -->
+    <ng-container *ngIf="activeTab === 'demandes'">
+
+      <h3 class="mf-section-title" *ngIf="!filteredDemandesEnAttente.length && !filteredDemandesTraitees.length">Mes demandes</h3>
+
+      <div class="mf-card mf-demande" *ngFor="let d of filteredDemandesEnAttente">
+        <div class="mf-icon mf-icon-pending"><ion-icon name="time-outline"></ion-icon></div>
+        <div class="mf-text">
+          <h4>{{ d.formation_intitule }}</h4>
+          <p class="mf-sub">{{ d.module_nom ? ('Module : ' + d.module_nom) : 'Formation entière' }}</p>
+          <span class="mf-pill mf-pill-pending"><ion-icon name="time"></ion-icon> En attente</span>
+        </div>
+        <ion-button fill="clear" size="small" color="danger" (click)="annuler(d)">
+          <ion-icon name="close-circle-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+      </div>
+
+      <div class="mf-card mf-demande" *ngFor="let d of filteredDemandesTraitees">
+        <div class="mf-icon" [class.mf-icon-ok]="d.statut === 'APPROUVEE'" [class.mf-icon-ko]="d.statut === 'REJETEE'">
+          <ion-icon [name]="d.statut === 'APPROUVEE' ? 'checkmark-circle-outline' : 'close-circle-outline'"></ion-icon>
+        </div>
+        <div class="mf-text">
+          <h4>{{ d.formation_intitule }}</h4>
+          <p class="mf-sub">{{ d.module_nom ? ('Module : ' + d.module_nom) : 'Formation entière' }}</p>
+          <span class="mf-pill" [class.mf-pill-ok]="d.statut === 'APPROUVEE'" [class.mf-pill-ko]="d.statut === 'REJETEE'">
+            {{ d.statut === 'APPROUVEE' ? 'Approuvée' : 'Rejetée' }}
+          </span>
+        </div>
+      </div>
+
+      <p class="mf-empty" *ngIf="!filteredDemandesEnAttente.length && !filteredDemandesTraitees.length">
+        Aucune demande pour le moment.
+      </p>
+    </ng-container>
+
+    <!-- ===================== Formations disponibles ===================== -->
+    <ng-container *ngIf="activeTab === 'disponibles'">
+
+      <div class="mf-formation-block" *ngFor="let f of filteredFormations">
+        <div class="mf-formation-head">
+          <div class="mf-icon"><ion-icon name="school-outline"></ion-icon></div>
+          <div class="mf-text">
+            <h4>{{ f.intitule }}</h4>
+            <p class="mf-sub" *ngIf="f.formateur_id">Responsable actuel : {{ f.formateur_nom_fr }}</p>
+            <p class="mf-sub" *ngIf="!f.formateur_id">Aucun responsable affecté</p>
+          </div>
+
+          <ion-button size="small" fill="outline" *ngIf="f.formateur_id !== myUserId && !demandeEnCoursPourFormation(f.id)"
+                      (click)="demanderFormation(f)">
+            Demander
+          </ion-button>
+          <span class="mf-pill mf-pill-pending" *ngIf="demandeEnCoursPourFormation(f.id)">
+            <ion-icon name="time"></ion-icon> Demande envoyée
+          </span>
+          <span class="mf-pill mf-pill-ok" *ngIf="f.formateur_id === myUserId">
+            <ion-icon name="checkmark-circle"></ion-icon> C'est vous
+          </span>
+        </div>
+
+        <div class="mf-module-row" *ngFor="let m of modulesByFormation[f.id]">
+          <ion-icon name="book-outline" class="mf-module-icon"></ion-icon>
+          <div class="mf-module-text">
+            <span class="mf-module-name">{{ m.nom }}</span>
+            <span class="mf-module-sub" *ngIf="m.formateur_id">{{ m.formateur_nom_fr }}</span>
+            <span class="mf-module-sub" *ngIf="!m.formateur_id">Aucun formateur affecté</span>
+          </div>
+
+          <ion-button size="small" fill="clear" *ngIf="m.formateur_id !== myUserId && !demandeEnCoursPourModule(m.id)"
+                      (click)="demanderModule(m)">
+            Demander
+          </ion-button>
+          <span class="mf-pill mf-pill-pending mf-pill-sm" *ngIf="demandeEnCoursPourModule(m.id)">
+            <ion-icon name="time"></ion-icon> Envoyée
+          </span>
+          <span class="mf-pill mf-pill-ok mf-pill-sm" *ngIf="m.formateur_id === myUserId">
+            <ion-icon name="checkmark-circle"></ion-icon> Vous
+          </span>
+        </div>
+        <p class="mf-empty mf-empty-sm" *ngIf="modulesByFormation[f.id] && !modulesByFormation[f.id].length">
+          Aucun module pour cette formation.
+        </p>
+      </div>
+
+      <p class="mf-empty" *ngIf="!filteredFormations.length">Aucune formation disponible.</p>
+    </ng-container>
+
+    <!-- Bottom help card, shown on every tab -->
+    <div class="mf-help-card">
+      <div class="mf-help-icon"><ion-icon name="bulb-outline"></ion-icon></div>
+      <div class="mf-help-text">
+        <h4>Besoin d'aide ?</h4>
+        <p>Consultez le guide d'utilisation ou contactez l'administration.</p>
+      </div>
+      <ion-button size="small" fill="outline" (click)="centreAide()">Centre d'aide</ion-button>
+    </div>
+
+  </ng-container>
+</ion-content>

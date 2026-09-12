@@ -1,0 +1,86 @@
+
+ion-content {
+  --background: #BE93FD;
+}
+
+img {
+  position: absolute;
+  top: 20%;
+  left: 45%;
+  transform: translateX(-50%);
+}
+
+ion-footer {
+  height: 50%;
+  ion-list {
+  height:100%;border-radius: 20px 20px 0 0;
+  ion-list-header {
+  ion-label {
+  font-weight: bold;
+  font-size: 1.8em;
+  }ion-item {
+    ion-label{
+    font-size: 0.9em;
+    overflow: visible;
+    ion-row{
+    ion-col{
+    ion-input {
+    font-size: 1.5em;
+    --background: var(--ion-color-light);
+    display:inline-block;
+    width: 8vh;
+    height: 8vh;
+    border-radius:5px
+    }
+    .marginLeft{
+    margin-left: 3vh;
+    }
+    }
+  }}}}}}
+.animated {
+  -webkit-animation-duration: 10s;
+  animation-duration: 10s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+
+@-webkit-keyframes bounceInUp {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(2000);
+  }
+  60% {
+    opacity: 1;
+    -webkit-transform: translateY(-30px);
+  }
+  80% {
+
+    -webkit-transform: translateY(10px);
+  }
+  100% {
+
+    -webkit-transform: translateY(0);
+  }
+}
+
+.bounceInUp {
+  -webkit-animation-name: bounceInUp;
+  animation-name: bounceInUp;
+}
+
+@keyframes bounceInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(2000);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-30px);
+  }
+  80% {
+    transform: translateY(10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}

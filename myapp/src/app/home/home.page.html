@@ -1,0 +1,57 @@
+
+
+
+
+
+
+
+
+
+<!-- ikhteyar dyal sign in awe sign up -->
+
+<!-- <ion-content [fullscreen]="true" class="ion-padding-top" class="ion-margin-left">
+  <div style="display: flex; justify-content: center;">
+    <ion-button fill="outline">Sign In</ion-button>
+    <ion-button fill="solid">Sign Up</ion-button>
+  </div>
+</ion-content> -->
+
+
+
+  <div id="main" >
+
+    <ion-header>
+      <ion-toolbar>
+                 <ion-buttons slot="start">
+             <ion-menu-button></ion-menu-button>
+                </ion-buttons>
+        <ion-title>Menu</ion-title>
+      </ion-toolbar>
+    </ion-header>
+</div>
+
+  <ion-menu contentId="main" >
+    <ion-header>
+      <ion-toolbar color="tertiary">
+        <ion-title color="dark">Menu Content</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content>
+      <ion-list>
+        <ion-item *ngFor="let p of pages" [routerLink]="p.url">
+        <ion-icon [name]="p.icon" slot="start"></ion-icon>
+        <ion-label>{{p.name}}</ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ion-menu>
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,108 @@
+<ion-header [translucent]="true" class="scan-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/hamza" text="Retour" (click)="closeModal()"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Scanner ma présence</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="ouvrirHistorique()">
+        <ion-icon name="time-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="scan-content" [class.scanning]="scanning">
+  <p class="page-explain">
+    <ion-icon name="information-circle-outline"></ion-icon>
+    Scannez le QR code du module affiché par votre formateur en séance. Votre pointage restera
+    <strong>en attente</strong> jusqu'à validation par le formateur.
+  </p>
+
+  <div class="mode-toggle">
+    <button class="mode-btn" [class.active]="mode === 'scan'" (click)="selectMode('scan')">
+      <ion-icon name="qr-code-outline"></ion-icon>
+      Scanner le QR code
+    </button>
+    <button class="mode-btn" [class.active]="mode === 'manual'" (click)="selectMode('manual')">
+      <ion-icon name="keypad-outline"></ion-icon>
+      Saisir le code manuellement
+    </button>
+  </div>
+
+  <div class="scan-frame" [class.live]="scanning" *ngIf="mode === 'scan'">
+    <div class="corner tl"></div>
+    <div class="corner tr"></div>
+    <div class="corner bl"></div>
+    <div class="corner br"></div>
+    <ng-container *ngIf="!scanning">
+      <ion-icon name="qr-code-outline" class="frame-icon"></ion-icon>
+      <p class="frame-text">Placez le QR code du module dans le cadre</p>
+      <p class="frame-subtext">affiché/projeté par votre formateur</p>
+      <button class="retry-camera-btn" (click)="relancerCamera()">
+        <ion-icon name="refresh-outline"></ion-icon>
+        Relancer la caméra
+      </button>
+    </ng-container>
+  </div>
+
+  <ion-button expand="block" class="stop-scan-btn" fill="solid" color="dark" *ngIf="scanning" (click)="stopScan()">
+    <ion-icon name="close-outline" slot="start"></ion-icon>
+    Arrêter le scan
+  </ion-button>
+
+  <div class="manual-entry" *ngIf="mode === 'manual'">
+    <ion-item lines="full">
+      <ion-icon name="keypad-outline" slot="start"></ion-icon>
+      <ion-input placeholder="Code du module (ex: CEDOC_MODULE:12)" [(ngModel)]="manualCode"
+                 (keyup.enter)="soumettreCodeManuel()" [disabled]="submitting"></ion-input>
+    </ion-item>
+  </div>
+
+  <div class="result-banner" *ngIf="result" [class.danger]="!result.success">
+    <ion-icon [name]="result.success ? 'time' : 'close-circle'"></ion-icon>
+    <div>
+      <span>{{ result.message }}</span>
+      <strong *ngIf="result.moduleNom">{{ result.moduleNom }}</strong>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer class="scan-footer" *ngIf="result">
+  <ion-toolbar>
+    <ion-button expand="block" color="dark" (click)="confirmer()">
+      <ion-icon name="scan-outline" slot="start"></ion-icon>
+      Scanner à nouveau
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>
+
+<div class="historique-overlay" *ngIf="showHistorique">
+  <div class="historique-panel">
+    <div class="historique-header">
+      <h3><ion-icon name="time-outline"></ion-icon> Mes demandes de pointage</h3>
+      <ion-button fill="clear" (click)="fermerHistorique()">
+        <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </div>
+
+    <div class="ion-text-center ion-padding" *ngIf="historiqueLoading">
+      <ion-spinner></ion-spinner>
+    </div>
+
+    <div class="historique-list" *ngIf="!historiqueLoading">
+      <div class="historique-row" *ngFor="let h of historique">
+        <ion-icon
+          [name]="h.statut === 'APPROUVEE' ? 'checkmark-circle' : (h.statut === 'REJETEE' ? 'close-circle' : 'time')"
+          [color]="h.statut === 'APPROUVEE' ? 'success' : (h.statut === 'REJETEE' ? 'danger' : 'warning')">
+        </ion-icon>
+        <div>
+          <strong>{{ h.module_nom }}</strong>
+          <span class="hist-code">{{ h.statut === 'APPROUVEE' ? 'Approuvé' : (h.statut === 'REJETEE' ? 'Rejeté' : 'En attente') }}</span>
+        </div>
+        <span class="hist-date">{{ h.date_creation | date:'dd/MM HH:mm' }}</span>
+      </div>
+      <p class="empty-note" *ngIf="!historique.length">Aucune demande de pointage pour le moment.</p>
+    </div>
+  </div>
+</div>

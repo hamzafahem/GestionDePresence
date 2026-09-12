@@ -1,0 +1,57 @@
+<ion-header [translucent]="true" class="rf-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/hamza" text="" (click)="closemodal()"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      <ion-icon name="document-text-outline"></ion-icon>
+      Gestion des réclamations
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="rf-content">
+  <div class="ion-text-center ion-padding" *ngIf="loading">
+    <ion-spinner></ion-spinner>
+  </div>
+
+  <ng-container *ngIf="!loading">
+    <p class="rf-hint" *ngIf="demandes.length">Consultation uniquement — l'approbation ou le rejet se fait depuis "Gestion de présence".</p>
+
+    <div class="rf-card" *ngFor="let d of demandes" (click)="toggleExpand(d)">
+      <div class="rf-card-top">
+        <div class="rf-icon"
+             [class.rf-icon-pending]="d.statut === 'EN_ATTENTE'"
+             [class.rf-icon-ok]="d.statut === 'APPROUVEE'"
+             [class.rf-icon-ko]="d.statut === 'REJETEE'">
+          <ion-icon name="document-text-outline"></ion-icon>
+        </div>
+
+        <div class="rf-text">
+          <h4>{{ d.doctorant_prenom }} {{ d.doctorant_nom }}</h4>
+          <p class="rf-sub">
+            {{ typeLabel(d.type) }}<span *ngIf="d.module_nom"> — {{ d.module_nom }}</span>
+          </p>
+          <p class="rf-date">{{ d.date_creation | date:'dd/MM/yyyy HH:mm' }}</p>
+        </div>
+
+        <span class="rf-pill"
+              [class.rf-pill-pending]="d.statut === 'EN_ATTENTE'"
+              [class.rf-pill-ok]="d.statut === 'APPROUVEE'"
+              [class.rf-pill-ko]="d.statut === 'REJETEE'">
+          {{ statutLabel(d.statut) }}
+        </span>
+      </div>
+
+      <div class="rf-details" *ngIf="expandedId === d.id">
+        <p *ngIf="d.objet"><strong>Objet :</strong> {{ d.objet }}</p>
+        <p *ngIf="d.description"><strong>Description :</strong> {{ d.description }}</p>
+        <p *ngIf="d.reponse"><strong>Réponse :</strong> {{ d.reponse }}</p>
+        <p *ngIf="d.traite_par_nom_fr"><strong>Traitée par :</strong> {{ d.traite_par_nom_fr }}</p>
+        <p *ngIf="d.date_traitement"><strong>Traitée le :</strong> {{ d.date_traitement | date:'dd/MM/yyyy HH:mm' }}</p>
+      </div>
+    </div>
+
+    <p class="rf-empty" *ngIf="!demandes.length">Aucune réclamation pour le moment.</p>
+  </ng-container>
+</ion-content>

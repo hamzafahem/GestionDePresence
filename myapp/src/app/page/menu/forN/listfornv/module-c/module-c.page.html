@@ -1,0 +1,62 @@
+<ion-header class="theme-header nouvelles">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button default-href="/menu/listfornv" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      <ion-icon name="book-outline"></ion-icon>
+      Modules
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button routerLink="/hamza">
+        <ion-icon name="home-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="theme-content nouvelles">
+  <div class="theme-card" *ngIf="formationIntitule" style="margin-top:16px;">
+    <div class="theme-icon nouvelles"><img src="/assets/formation_default.webp" alt=""></div>
+    <div class="theme-text">
+      <h4 class="ion-text-capitalize">{{ formationIntitule }}</h4>
+      <p>Consultez les modules et la présence des doctorants.</p>
+    </div>
+  </div>
+
+  <div class="ion-text-center ion-padding" *ngIf="loading">
+    <ion-spinner></ion-spinner>
+  </div>
+
+  <div class="empty-note" *ngIf="!loading && !formationId">
+    Aucune formation sélectionnée. Retournez à la liste des formations.
+  </div>
+
+  <div class="empty-note" *ngIf="!loading && formationId && modules.length === 0">
+    Aucun module pour cette formation.
+  </div>
+
+  <ng-container *ngFor="let m of modules">
+    <div class="theme-card" (click)="toggleRoster(m)">
+      <div class="theme-icon nouvelles"><img src="/assets/module_default.png" alt=""></div>
+      <div class="theme-text">
+        <h4 class="ion-text-capitalize">{{ m.nom }}</h4>
+        <p>Toucher pour voir qui a été présent</p>
+      </div>
+      <ion-icon [name]="expandedModuleId === m.id ? 'chevron-up-outline' : 'chevron-down-outline'" class="chev"></ion-icon>
+    </div>
+
+    <div class="theme-roster" *ngIf="expandedModuleId === m.id">
+      <div class="ion-text-center" *ngIf="rosterLoading">
+        <ion-spinner name="dots"></ion-spinner>
+      </div>
+      <div class="roster-row" *ngFor="let r of roster">
+        <ion-icon [name]="r.present ? 'checkmark-circle' : 'close-circle-outline'" [color]="r.present ? 'success' : 'medium'"></ion-icon>
+        <span>{{ r.prenom }} {{ r.nom }}</span>
+        <span class="roster-code">{{ r.code_apogee }}</span>
+        <span class="roster-date" *ngIf="r.present && r.date_participation">{{ r.date_participation | date:'HH:mm' }}</span>
+      </div>
+      <p class="empty-note" *ngIf="!rosterLoading && !roster.length">Aucun doctorant dans cette formation.</p>
+    </div>
+  </ng-container>
+</ion-content>

@@ -1,0 +1,9 @@
+# Dependencies
+node_modules/
+myapp/node_modules/
+
+# Build Java
+backend/target/
+
+# Cache Angular
+myapp/.angular/

@@ -1,0 +1,273 @@
+.cd-header {
+  ion-toolbar {
+    --background: #17264d;
+    --color: #fff;
+  }
+  ion-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: 1em;
+
+    ion-icon { font-size: 1.15em; }
+  }
+  ion-back-button { --color: #fff; }
+}
+
+.carte-content {
+  --background: #f4f6fb;
+}
+
+.carte-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 16px 32px;
+}
+
+.carte-hint {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #8a90a8;
+  font-size: 0.8em;
+  margin: 0 0 18px;
+
+  ion-icon { font-size: 1.1em; }
+}
+
+.flip-stage {
+  perspective: 1400px;
+  width: 100%;
+  max-width: 320px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: pan-y;
+  cursor: grab;
+}
+.flip-stage:active { cursor: grabbing; }
+
+.flip-card {
+  position: relative;
+  width: 300px;
+  height: 190px;
+  transform-style: preserve-3d;
+  transition: transform 0.5s cubic-bezier(0.4, 0.2, 0.2, 1);
+
+  &.no-transition { transition: none; }
+}
+
+.flip-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  backface-visibility: hidden;
+  box-shadow: 0 16px 32px rgba(20, 30, 60, 0.25);
+  overflow: hidden;
+  color: #fff;
+}
+
+.flip-front {
+  background: linear-gradient(135deg, #17264d, #3f7fe0);
+  display: flex;
+  flex-direction: column;
+}
+
+.flip-back {
+  background: linear-gradient(135deg, #1c2b57, #2f6fd6);
+  transform: rotateY(180deg);
+  padding: 14px 16px;
+}
+
+.card-top-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 14px 8px;
+  font-size: 0.8em;
+  font-weight: 700;
+
+  ion-icon { font-size: 1.1em; }
+}
+
+.card-body-front {
+  flex: 1;
+  display: flex;
+  gap: 12px;
+  padding: 0 14px 14px;
+}
+
+.card-qr-box {
+  width: 78px;
+  height: 78px;
+  background: #fff;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  canvas { width: 68px; height: 68px; }
+}
+
+.card-front-info {
+  flex: 1;
+  min-width: 0;
+
+  .fname { font-weight: 700; font-size: 0.95em; margin: 0; }
+  .frole {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.18);
+    font-size: 0.68em;
+    padding: 2px 8px;
+    border-radius: 999px;
+    margin: 4px 0 6px;
+  }
+  .frow {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.72em;
+    margin-top: 5px;
+    opacity: 0.95;
+
+    ion-icon { font-size: 1.05em; flex-shrink: 0; }
+  }
+}
+
+.card-back-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card-back-title { font-weight: 700; font-size: 0.85em; }
+.card-back-photo {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  font-weight: 700;
+  font-size: 0.8em;
+  flex-shrink: 0;
+
+  img { width: 100%; height: 100%; object-fit: cover; }
+}
+
+.card-back-rows {
+  margin-top: 8px;
+  font-size: 0.72em;
+  line-height: 1.6;
+
+  b { font-weight: 600; }
+}
+
+.card-barcode {
+  margin-top: 8px;
+  background: #fff;
+  border-radius: 8px;
+  padding: 4px;
+  display: flex;
+  justify-content: center;
+}
+
+.card-back-brand {
+  text-align: right;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  font-size: 0.85em;
+  opacity: 0.9;
+  margin-top: 4px;
+}
+
+.flip-btn {
+  margin-top: 18px;
+  --border-radius: 999px;
+}
+
+.carte-perdue-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 320px;
+  margin-top: 24px;
+  padding: 14px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 10px rgba(20, 30, 60, 0.06);
+
+  .cp-icon {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    border-radius: 12px;
+    background: #fff4e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    ion-icon { font-size: 1.3em; color: #b3720c; }
+  }
+
+  .cp-text {
+    flex: 1;
+    min-width: 0;
+
+    h4 {
+      margin: 0 0 2px;
+      font-size: 0.88em;
+      font-weight: 700;
+      color: #17264d;
+    }
+    p {
+      margin: 0;
+      font-size: 0.75em;
+      color: #8a90a8;
+      line-height: 1.35;
+    }
+  }
+}
+
+.cp-status {
+  width: 100%;
+  max-width: 320px;
+  margin-top: 10px;
+
+  .cp-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.78em;
+    font-weight: 700;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: #fff4e0;
+    color: #b3720c;
+
+    ion-icon { font-size: 1.15em; }
+
+    &.ok { background: #e3f5ec; color: #14a06d; }
+    &.ko { background: #fdeef0; color: #d1373f; }
+  }
+
+  .cp-reponse {
+    margin: 6px 2px 0;
+    font-size: 0.75em;
+    color: #6b7290;
+    font-style: italic;
+  }
+}
+
+.cp-btn {
+  width: 100%;
+  max-width: 320px;
+  margin-top: 12px;
+  --border-radius: 12px;
+}

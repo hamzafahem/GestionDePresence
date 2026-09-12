@@ -1,0 +1,118 @@
+<ion-header [translucent]="true" class="gp-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/hamza" text="" (click)="closemodal()"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      <ion-icon name="people-outline"></ion-icon>
+      Gestion de présence
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="ouvrirQrModule()" *ngIf="selectedModuleId">
+        <ion-icon name="qr-code-outline"></ion-icon>
+      </ion-button>
+      <ion-button (click)="showTodayInfo()">
+        <ion-icon name="calendar-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <ion-toolbar class="selectors">
+    <div class="selector-row">
+      <div class="selector">
+        <ion-label>Formation</ion-label>
+        <ion-select [(ngModel)]="selectedFormationId" (ionChange)="onFormationChange()" interface="popover">
+          <ion-select-option *ngFor="let f of formations" [value]="f.id">{{ f.intitule }}</ion-select-option>
+        </ion-select>
+      </div>
+      <div class="selector">
+        <ion-label>Module</ion-label>
+        <ion-select [(ngModel)]="selectedModuleId" (ionChange)="onModuleChange()" interface="popover">
+          <ion-select-option *ngFor="let m of modules" [value]="m.id">{{ m.nom }}</ion-select-option>
+        </ion-select>
+      </div>
+    </div>
+  </ion-toolbar>
+
+  <ion-toolbar>
+    <ion-searchbar [(ngModel)]="searchTerm" placeholder="Rechercher un doctorant..."></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="gp-content">
+  <div class="ion-text-center ion-padding" *ngIf="loading">
+    <ion-spinner></ion-spinner>
+  </div>
+
+  <div class="summary-card" *ngIf="!loading">
+    <div class="summary-icon"><ion-icon name="people"></ion-icon></div>
+    <div class="summary-text">
+      <strong>{{ roster.length }} doctorant{{ roster.length > 1 ? 's' : '' }}</strong>
+      <span>Participants au séminaire</span>
+    </div>
+    <div class="summary-stats">
+      <span class="stat present"><i></i>{{ presentCount }} présent{{ presentCount > 1 ? 's' : '' }}</span>
+      <span class="stat absent"><i></i>{{ absentCount }} absent{{ absentCount > 1 ? 's' : '' }}</span>
+    </div>
+  </div>
+
+  <div class="roster-row" *ngFor="let row of filteredRoster" [class.present]="row.present">
+    <ion-avatar class="roster-avatar" [style.background]="avatarColor(row)">
+      <img *ngIf="row.photo" [src]="row.photo">
+      <span *ngIf="!row.photo">{{ initials(row) }}</span>
+    </ion-avatar>
+
+    <div class="roster-text">
+      <h4>{{ row.prenom }} {{ row.nom }}</h4>
+      <p class="roster-code">{{ row.code_apogee }}</p>
+      <span class="status-pill" [class.ok]="row.present" [class.ko]="!row.present">
+        <ion-icon [name]="row.present ? 'checkmark-circle' : 'close-circle'"></ion-icon>
+        {{ row.present ? ('Présent — ' + (row.date_participation | date:'HH:mm')) : 'Absent' }}
+      </span>
+      <ion-badge color="warning" class="reclamation-badge" *ngIf="row.reclamation_id">{{ reclamationLabel(row) }}</ion-badge>
+    </div>
+
+    <ion-toggle [checked]="row.present" [disabled]="!editMode || busyDoctorantId === row.doctorant_id"
+                (ionChange)="togglePresence(row)"></ion-toggle>
+    <ion-button fill="clear" size="small" class="row-menu-btn" (click)="openRowMenu(row)">
+      <ion-icon name="ellipsis-vertical" slot="icon-only"></ion-icon>
+    </ion-button>
+  </div>
+
+  <p class="empty-note" *ngIf="!loading && !filteredRoster.length">Aucun doctorant trouvé.</p>
+</ion-content>
+
+<ion-footer class="gp-footer">
+  <div class="footer-note">
+    <ion-icon name="information-circle-outline"></ion-icon>
+    La présence est enregistrée automatiquement à l'activation du statut.
+  </div>
+  <div class="footer-actions">
+    <ion-button fill="outline" color="medium" (click)="toggleEditMode()" *ngIf="!editMode">
+      <ion-icon name="create-outline" slot="start"></ion-icon>
+      Modifier
+    </ion-button>
+    <ion-button color="success" (click)="toggleEditMode()" *ngIf="editMode">
+      <ion-icon name="checkmark-outline" slot="start"></ion-icon>
+      Enregistrer
+    </ion-button>
+  </div>
+  <ion-fab-button size="small" class="export-fab" routerLink="/hajar">
+    <ion-icon name="download-outline"></ion-icon>
+  </ion-fab-button>
+</ion-footer>
+
+<div class="qr-modal-backdrop" *ngIf="showQrModal" (click)="fermerQrModule()">
+  <div class="qr-modal-card" (click)="$event.stopPropagation()">
+    <ion-button fill="clear" size="small" class="qr-modal-close" (click)="fermerQrModule()">
+      <ion-icon name="close" slot="icon-only"></ion-icon>
+    </ion-button>
+    <div class="qr-modal-icon"><ion-icon name="qr-code-outline"></ion-icon></div>
+    <h3>QR code du module</h3>
+    <p>Affichez ce code aux doctorants pour qu'ils pointent leur présence en séance.</p>
+    <div class="qr-modal-canvas-wrap">
+      <canvas #moduleQrCanvas></canvas>
+    </div>
+    <p class="qr-modal-note">Le pointage reste en attente tant que vous ne l'approuvez pas depuis la liste.</p>
+  </div>
+</div>

@@ -1,0 +1,49 @@
+<ion-content [fullscreen]="true" class="signin-content">
+  <div class="signin-wrapper">
+    <div class="brand">
+      <img src="../../../../assets/uh1_logo.png" alt="UH1" class="brand-logo">
+      <p class="brand-kicker">UNIVERSITÉ HASSAN PREMIER</p>
+      <p class="brand-sub">CEDoc — Centre d'Études Doctorales</p>
+    </div>
+
+    <div class="signin-card animated bounceInUp">
+      <h1>Connexion</h1>
+      <p class="subtitle">Connectez-vous à votre espace</p>
+      <div class="accent-bar"></div>
+
+      <form [formGroup]="form">
+        <div class="field">
+          <ion-icon name="person-outline"></ion-icon>
+          <input type="text" placeholder="Entrez votre identifiant" formControlName="Username">
+        </div>
+        <ion-text class="field-error" *ngIf="!form?.get('Username')?.valid && form?.get('Username')?.touched">
+          Veuillez entrer votre identifiant
+        </ion-text>
+
+        <div class="field">
+          <ion-icon name="lock-closed-outline"></ion-icon>
+          <input [type]="type ? 'password' : 'text'" placeholder="Entrez votre mot de passe" formControlName="Password">
+          <ion-icon class="eye" [name]="type ? 'eye-outline' : 'eye-off-outline'" (click)="changetype()"></ion-icon>
+        </div>
+        <ion-text class="field-error" *ngIf="!form?.get('Password')?.valid && form?.get('Password')?.touched">
+          Veuillez entrer votre mot de passe
+        </ion-text>
+      </form>
+
+      <div class="row-between">
+        <ion-text class="link" (click)="forgetpassword()">Mot de passe oublié ?</ion-text>
+        <ion-text class="link" routerLink="/sign-up">Créer un compte</ion-text>
+      </div>
+
+      <button class="signin-btn" (click)="setAuth()">
+        <ion-icon name="log-in-outline"></ion-icon>
+        Se connecter
+      </button>
+
+      <p class="secure-note">
+        <ion-icon name="shield-checkmark-outline"></ion-icon>
+        Accès sécurisé et confidentiel
+      </p>
+    </div>
+  </div>
+</ion-content>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Accueil — mpresence back-office</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <style>
+        .stat-card {
+            border-radius: 16px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            color: #fff;
+        }
+        .stat-card.blue { background: linear-gradient(135deg, #4f7cff, #6ea1ff); }
+        .stat-card.purple { background: linear-gradient(135deg, #9b6bff, #b98bff); }
+        .stat-card .icon-badge {
+            width: 46px; height: 46px; border-radius: 12px;
+            background: rgba(255,255,255,.25);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.3rem; margin-bottom: .75rem;
+        }
+        .stat-card .bg-icon {
+            position: absolute; right: -10px; bottom: -10px;
+            font-size: 5rem; opacity: .18;
+        }
+        .stat-card .delta { font-size: .8rem; opacity: .9; }
+        .card-panel { border-radius: 14px; border: 1px solid #eceef2; background: #fff; }
+        .stat-mini { display: flex; align-items: center; gap: .6rem; padding: .5rem 0; }
+        .stat-mini .icon { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: .9rem; }
+        .activity-item { display: flex; gap: .75rem; padding: .65rem 0; border-bottom: 1px solid #f1f2f5; }
+        .activity-item:last-child { border-bottom: none; }
+        .activity-item .icon-circle { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .quick-action {
+            display: flex; align-items: center; justify-content: space-between;
+            background: #fff; border: 1px solid #eceef2; border-radius: 12px;
+            padding: .9rem 1.1rem; text-decoration: none; color: #222; flex: 1;
+        }
+        .quick-action:hover { background: #f8f9fb; color: #222; }
+    </style>
+</head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+
+<div class="container-fluid" style="padding-left: 2rem; padding-right: 2rem;">
+
+    <div class="d-flex align-items-start mb-4">
+        <div style="font-size:1.8rem;" class="me-2">☀️</div>
+        <div>
+            <h3 class="mb-0" th:text="'Bonjour, ' + ${currentUser.prenomFr} + ' ' + ${currentUser.nomFr}"></h3>
+            <p class="text-muted mb-0">Bienvenue sur votre espace CEDoc. Voici un aperçu de vos activités aujourd'hui.</p>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-3">
+        <div class="col-md-6">
+            <div class="stat-card blue">
+                <i class="bi bi-mortarboard-fill bg-icon"></i>
+                <div class="icon-badge"><i class="bi bi-mortarboard-fill"></i></div>
+                <h2 class="mb-0" th:text="${stats.formationsCount}"></h2>
+                <div>Formations</div>
+                <div class="delta"><i class="bi bi-arrow-up-short"></i> +<span th:text="${stats.formationsDelta}"></span> cette semaine</div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="stat-card purple">
+                <i class="bi bi-people-fill bg-icon"></i>
+                <div class="icon-badge"><i class="bi bi-people-fill"></i></div>
+                <h2 class="mb-0" th:text="${stats.doctorantsCount}"></h2>
+                <div>Doctorants</div>
+                <div class="delta"><i class="bi bi-arrow-up-short"></i> +<span th:text="${stats.doctorantsDelta}"></span> cette semaine</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-lg-8">
+            <div class="card-panel p-3 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <div>
+                        <h6 class="mb-0"><i class="bi bi-bar-chart-fill text-primary"></i> Activité globale</h6>
+                        <small class="text-muted">Aperçu des activités sur les 7 derniers jours</small>
+                    </div>
+                    <span class="badge text-bg-light border" th:text="${chart.rangeLabel}"></span>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-9">
+                        <svg viewBox="0 0 700 200" style="width:100%; height:200px;">
+                            <polyline th:attr="points=${chart.svgPoints}" fill="none" stroke="#4f7cff" stroke-width="3"/>
+                            <g th:each="pt, iter : ${chart.counts}">
+                                <circle th:attr="cx=${iter.index * 700.0 / (chart.counts.size() - 1 == 0 ? 1 : chart.counts.size() - 1)},
+                                                  cy=${190 - (170.0 * pt / (chart.maxCount == 0 ? 1 : chart.maxCount))}"
+                                        r="4" fill="#4f7cff"/>
+                            </g>
+                        </svg>
+                        <div class="d-flex justify-content-between text-muted small px-1">
+                            <span th:each="l : ${chart.labels}" th:text="${l}"></span>
+                        </div>
+                    </div>
+                    <div class="col-3 border-start ps-3">
+                        <div class="text-muted small mb-1">Statistiques</div>
+                        <div class="stat-mini">
+                            <span class="icon bg-primary-subtle text-primary"><i class="bi bi-mortarboard"></i></span>
+                            <span class="flex-fill">Formations</span>
+                            <strong th:text="${stats.formationsCount}"></strong>
+                        </div>
+                        <div class="stat-mini">
+                            <span class="icon bg-purple text-purple" style="background:#f2ecff;color:#9b6bff;"><i class="bi bi-people"></i></span>
+                            <span class="flex-fill">Doctorants</span>
+                            <strong th:text="${stats.doctorantsCount}"></strong>
+                        </div>
+                        <div class="stat-mini">
+                            <span class="icon bg-success-subtle text-success"><i class="bi bi-calendar-event"></i></span>
+                            <span class="flex-fill">RDVs</span>
+                            <strong th:text="${stats.rdvsCount}"></strong>
+                        </div>
+                        <div class="stat-mini">
+                            <span class="icon bg-warning-subtle text-warning"><i class="bi bi-envelope-paper"></i></span>
+                            <span class="flex-fill">Demandes</span>
+                            <strong th:text="${stats.demandesCount}"></strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card-panel p-3 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h6 class="mb-0"><i class="bi bi-clock-history"></i> Activités récentes</h6>
+                </div>
+                <div th:if="${activities.isEmpty()}" class="text-muted small">Aucune activité récente.</div>
+                <div class="activity-item" th:each="a : ${activities}">
+                    <div class="icon-circle" th:classappend="${a.colorClass}">
+                        <i th:class="'bi ' + ${a.iconClass}"></i>
+                    </div>
+                    <div>
+                        <div class="fw-semibold small" th:text="${a.title}"></div>
+                        <div class="text-muted small" th:text="${a.description}"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex gap-3 mt-3 flex-wrap">
+        <a th:href="@{/backoffice/formations}" class="quick-action">
+            <span><i class="bi bi-mortarboard-fill text-primary me-2"></i>Accéder aux formations</span>
+            <i class="bi bi-chevron-right text-muted"></i>
+        </a>
+        <a th:href="@{/backoffice/rendezvous}" class="quick-action">
+            <span><i class="bi bi-calendar-event-fill text-success me-2"></i>Voir mes RDVs</span>
+            <i class="bi bi-chevron-right text-muted"></i>
+        </a>
+        <a th:href="@{/backoffice/demandes}" class="quick-action">
+            <span><i class="bi bi-envelope-paper-fill text-warning me-2"></i>Mes demandes</span>
+            <i class="bi bi-chevron-right text-muted"></i>
+        </a>
+    </div>
+
+</div>
+</body>
+</html>

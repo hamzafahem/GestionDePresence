@@ -1,0 +1,344 @@
+.scan-header {
+  ion-toolbar {
+    --background: #17264d;
+    --color: #fff;
+  }
+  ion-buttons[slot="start"] ion-button {
+    --color: #fff;
+    font-weight: 600;
+  }
+
+  .selectors {
+    --background: #17264d;
+    padding-bottom: 6px;
+
+    .selector-row {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+      padding: 0 12px;
+    }
+
+    .selector {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 4px 10px;
+
+      ion-label {
+        display: block;
+        font-size: 0.68em;
+        color: rgba(255, 255, 255, 0.7);
+      }
+      ion-select {
+        --placeholder-color: #fff;
+        color: #fff;
+        font-weight: 600;
+        font-size: 0.85em;
+        width: 100%;
+      }
+    }
+  }
+}
+
+.scan-content {
+  --background: #f4f6fb;
+
+  /* Pendant un scan actif : la caméra native s'affiche derrière la WebView
+     (BarcodeScanner.hideBackground()) — tout doit devenir transparent pour
+     qu'elle soit visible, sinon elle reste cachée derrière nos fonds opaques. */
+  &.scanning {
+    --background: transparent;
+
+    .info-row, .mode-toggle, .hint-note {
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+
+  .info-row {
+    display: flex;
+    gap: 10px;
+    padding: 14px 14px 0;
+
+    .info-chip {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #fff;
+      border-radius: 14px;
+      padding: 12px;
+      box-shadow: 0 2px 8px rgba(20, 30, 60, 0.06);
+
+      ion-icon {
+        font-size: 1.3em;
+        color: #17264d;
+      }
+
+      .label {
+        display: block;
+        font-size: 0.72em;
+        color: #8a90a8;
+
+        .info-icon {
+          font-size: 1.1em;
+          vertical-align: -2px;
+          color: #b6bcd4;
+        }
+      }
+
+      .value {
+        display: block;
+        font-size: 0.85em;
+        font-weight: 700;
+        color: #17264d;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+
+  .mode-toggle {
+    display: flex;
+    gap: 10px;
+    padding: 14px;
+
+    .mode-btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 8px;
+      font-size: 0.8em;
+      font-weight: 700;
+      background: #e7eaf3;
+      color: #5a6180;
+
+      ion-icon {
+        font-size: 1.1em;
+      }
+
+      &.active {
+        background: #17264d;
+        color: #fff;
+      }
+    }
+  }
+
+  .scan-frame {
+    position: relative;
+    margin: 0 14px 14px;
+    height: 260px;
+    background: #e7eaf3;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    .frame-icon {
+      font-size: 2.6em;
+      color: #17264d;
+      margin-bottom: 8px;
+    }
+
+    .frame-text {
+      margin: 0;
+      font-weight: 700;
+      color: #17264d;
+      font-size: 0.9em;
+    }
+
+    .frame-subtext {
+      margin: 2px 0 0;
+      color: #8a90a8;
+      font-size: 0.78em;
+    }
+
+    .retry-camera-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 14px;
+      border: 1px solid #3f7fe0;
+      background: #fff;
+      color: #3f7fe0;
+      border-radius: 999px;
+      padding: 8px 16px;
+      font-size: 0.78em;
+      font-weight: 700;
+
+      ion-icon { font-size: 1.1em; }
+    }
+
+    .corner {
+      position: absolute;
+      width: 28px;
+      height: 28px;
+      border-color: #3f7fe0;
+      border-style: solid;
+      border-width: 0;
+    }
+    .tl { top: 14px; left: 14px; border-top-width: 3px; border-left-width: 3px; border-radius: 8px 0 0 0; }
+    .tr { top: 14px; right: 14px; border-top-width: 3px; border-right-width: 3px; border-radius: 0 8px 0 0; }
+    .bl { bottom: 14px; left: 14px; border-bottom-width: 3px; border-left-width: 3px; border-radius: 0 0 0 8px; }
+    .br { bottom: 14px; right: 14px; border-bottom-width: 3px; border-right-width: 3px; border-radius: 0 0 8px 0; }
+
+    /* Pendant le scan : plus de fond opaque, juste les 4 coins pour guider,
+       la caméra native est visible à travers. */
+    &.live {
+      background: transparent;
+      box-shadow: 0 0 0 2000px rgba(0, 0, 0, 0.25);
+
+      .corner {
+        border-color: #fff;
+      }
+    }
+  }
+
+  .stop-scan-btn {
+    margin: 0 14px 14px;
+  }
+
+  .manual-entry {
+    margin: 0 14px 14px;
+    background: #fff;
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  .hint-note {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0 14px 14px;
+    color: #8a90a8;
+    font-size: 0.75em;
+
+    ion-icon {
+      font-size: 1.1em;
+      flex-shrink: 0;
+    }
+  }
+
+  .result-banner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 14px 14px;
+    padding: 14px;
+    border-radius: 14px;
+    background: #e3f5ec;
+    color: #14a06d;
+
+    ion-icon {
+      font-size: 1.6em;
+      flex-shrink: 0;
+    }
+
+    div {
+      display: flex;
+      flex-direction: column;
+      font-size: 0.85em;
+
+      strong {
+        font-size: 1.05em;
+      }
+    }
+
+    &.danger {
+      background: #fde8e8;
+      color: #d1373f;
+    }
+  }
+}
+
+.scan-footer {
+  ion-toolbar {
+    display: flex;
+    gap: 10px;
+    padding: 0 10px;
+
+    ion-button {
+      flex: 1;
+      margin: 8px 4px;
+    }
+  }
+}
+
+.historique-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 30, 60, 0.5);
+  z-index: 1000;
+  display: flex;
+  align-items: flex-end;
+}
+
+.historique-panel {
+  width: 100%;
+  max-height: 75vh;
+  background: #fff;
+  border-radius: 20px 20px 0 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.historique-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 16px 8px;
+  border-bottom: 1px solid #f1f2f5;
+
+  h3 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    font-size: 1em;
+    font-weight: 700;
+    color: #17264d;
+
+    ion-icon { font-size: 1.1em; }
+  }
+}
+
+.historique-list {
+  overflow-y: auto;
+  padding: 8px 16px 20px;
+}
+
+.historique-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f6f7f9;
+
+  &:last-child { border-bottom: none; }
+
+  ion-icon { font-size: 1.3em; flex-shrink: 0; }
+
+  div {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+
+    strong { font-size: 0.88em; color: #24273a; }
+    .hist-code { font-size: 0.72em; color: #8a90a8; }
+  }
+
+  .hist-date {
+    font-size: 0.72em;
+    color: #8a90a8;
+    flex-shrink: 0;
+  }
+}

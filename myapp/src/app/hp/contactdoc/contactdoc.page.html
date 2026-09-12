@@ -1,0 +1,51 @@
+<ion-header [translucent]="true" class="mm-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/hamza" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      <ion-icon name="book-outline"></ion-icon>
+      Mes modules
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="mm-content">
+  <div class="ion-text-center ion-padding" *ngIf="loading">
+    <ion-spinner></ion-spinner>
+  </div>
+
+  <p class="empty-note" *ngIf="!loading && !formationId">
+    Vous n'êtes inscrit(e) à aucune formation pour le moment.
+  </p>
+
+  <ng-container *ngIf="!loading && formationId">
+    <h3 class="mm-section-title">Modules de ma formation</h3>
+
+    <div class="mm-card" *ngFor="let m of modules">
+      <div class="mm-icon"><img src="/assets/module_default.png" alt=""></div>
+      <div class="mm-text">
+        <h4>{{ m.nom }}</h4>
+        <span class="status-pill" [class.ok]="estPresent(m.id)" [class.pending]="!estPresent(m.id)">
+          <ion-icon [name]="estPresent(m.id) ? 'checkmark-circle' : 'time-outline'"></ion-icon>
+          {{ estPresent(m.id) ? ('Présent — ' + (presenceByModule[m.id] | date:'dd/MM/yyyy HH:mm')) : 'Pas encore de présence' }}
+        </span>
+
+        <div class="mm-actions">
+          <ion-badge color="warning" *ngIf="reclamationStatutByModule[m.id] === 'EN_ATTENTE'">Réclamation en attente</ion-badge>
+          <ion-badge color="success" *ngIf="reclamationStatutByModule[m.id] === 'APPROUVEE'">Réclamation approuvée</ion-badge>
+          <ion-badge color="danger" *ngIf="reclamationStatutByModule[m.id] === 'REJETEE'">Réclamation rejetée</ion-badge>
+
+          <ion-button size="small" fill="outline" color="warning"
+                      *ngIf="!estPresent(m.id) && !reclamationStatutByModule[m.id]"
+                      (click)="signaler(m)">
+            <ion-icon name="alert-circle-outline" slot="start"></ion-icon>
+            Signaler
+          </ion-button>
+        </div>
+      </div>
+    </div>
+
+    <p class="empty-note" *ngIf="!modules.length">Aucun module pour cette formation.</p>
+  </ng-container>
+</ion-content>

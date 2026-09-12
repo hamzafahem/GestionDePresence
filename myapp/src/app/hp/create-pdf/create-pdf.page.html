@@ -1,0 +1,139 @@
+<ion-header [translucent]="true" class="cp-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="closemodal()">
+        <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Feuille de présence</ion-title>
+    <ion-buttons slot="end">
+      <ion-button class="pdf-btn" [disabled]="!presences.length || generatingPdf" (click)="createPdf()">
+        <ion-spinner name="dots" *ngIf="generatingPdf"></ion-spinner>
+        <ng-container *ngIf="!generatingPdf">
+          <ion-icon name="download-outline" slot="start"></ion-icon>
+          Télécharger PDF
+        </ng-container>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <ion-toolbar class="selectors">
+    <div class="selector-row">
+      <div class="selector">
+        <ion-label>Formation</ion-label>
+        <ion-select [(ngModel)]="selectedFormationId" (ionChange)="onFormationChange()" interface="popover">
+          <ion-select-option *ngFor="let f of formations" [value]="f.id">{{ f.intitule }}</ion-select-option>
+        </ion-select>
+      </div>
+      <div class="selector">
+        <ion-label>Module</ion-label>
+        <ion-select [(ngModel)]="selectedModuleId" (ionChange)="onModuleChange()" interface="popover">
+          <ion-select-option *ngFor="let m of modules" [value]="m.id">{{ m.nom }}</ion-select-option>
+        </ion-select>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="cp-content">
+  <div class="ion-text-center ion-padding" *ngIf="loading">
+    <ion-spinner></ion-spinner>
+  </div>
+
+  <div class="print-wrapper" id="print-wrapper" *ngIf="!loading">
+    <div class="formation-card">
+      <div class="formation-icon"><ion-icon name="school-outline"></ion-icon></div>
+      <div class="formation-text">
+        <h4>{{ selectedFormationIntitule || 'Formation' }}</h4>
+        <p>Formation doctorale</p>
+      </div>
+    </div>
+
+    <div class="info-grid">
+      <div class="info-tile">
+        <ion-icon name="book-outline"></ion-icon>
+        <div class="info-tile-text">
+          <span class="info-label">Module</span>
+          <span class="info-value">{{ selectedModuleNom || '—' }}</span>
+        </div>
+      </div>
+      <div class="info-tile">
+        <ion-icon name="calendar-outline"></ion-icon>
+        <div class="info-tile-text">
+          <span class="info-label">Date</span>
+          <span class="info-value">{{ today | date:'dd/MM/yyyy' }}</span>
+        </div>
+      </div>
+      <div class="info-tile">
+        <ion-icon name="person-outline"></ion-icon>
+        <div class="info-tile-text">
+          <span class="info-label">Formateur</span>
+          <span class="info-value">{{ formateurName || '—' }}</span>
+        </div>
+      </div>
+      <div class="info-tile">
+        <ion-icon name="school-outline"></ion-icon>
+        <div class="info-tile-text">
+          <span class="info-label">Formation</span>
+          <span class="info-value">{{ selectedFormationIntitule || '—' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-header">
+      <div class="section-title">
+        <ion-icon name="list-outline"></ion-icon>
+        Liste des présences
+      </div>
+      <span class="count-pill">{{ presences.length }} présence{{ presences.length > 1 ? 's' : '' }}</span>
+    </div>
+
+    <div class="table-card">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Doctorant</th>
+            <th>CNE</th>
+            <th>Code Apogée</th>
+            <th>Date et heure</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of presences; index as i">
+            <td>{{ i + 1 }}</td>
+            <td>{{ p.doctorant_prenom }} {{ p.doctorant_nom }}</td>
+            <td>{{ p.doctorant_cne || '—' }}</td>
+            <td>{{ p.doctorant_code_apogee || '—' }}</td>
+            <td>{{ p.date_participation | date:'dd/MM/yyyy HH:mm' }}</td>
+          </tr>
+          <tr *ngIf="!presences.length">
+            <td colspan="5" class="empty-cell">Aucune présence enregistrée pour ce module.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="success-banner" *ngIf="presences.length > 0">
+      <ion-icon name="checkmark-circle"></ion-icon>
+      <div class="success-text">
+        <strong>{{ presences.length }} présence{{ presences.length > 1 ? 's' : '' }} enregistrée{{ presences.length > 1 ? 's' : '' }}</strong>
+        <span>Cette feuille de présence est à jour.</span>
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer class="cp-footer" *ngIf="!loading">
+  <ion-button fill="outline" class="footer-back-btn" (click)="closemodal()">
+    <ion-icon name="arrow-back-outline" slot="start"></ion-icon>
+    Retour
+  </ion-button>
+  <ion-button class="footer-pdf-btn" [disabled]="!presences.length || generatingPdf" (click)="createPdf()">
+    <ion-spinner name="dots" *ngIf="generatingPdf"></ion-spinner>
+    <ng-container *ngIf="!generatingPdf">
+      <ion-icon name="download-outline" slot="start"></ion-icon>
+      Télécharger PDF
+    </ng-container>
+  </ion-button>
+</ion-footer>

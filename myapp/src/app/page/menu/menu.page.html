@@ -1,0 +1,74 @@
+<div class="ion-page" id="main">
+  <ion-header class="app-header">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-back-button defaultHref="/hamza" text=""></ion-back-button>
+      </ion-buttons>
+      <ion-title>
+        <ion-icon name="school-outline"></ion-icon>
+        Formations
+      </ion-title>
+      <ion-buttons slot="end">
+        <ion-button routerLink="/profil" class="topbar-avatar-btn">
+          <img *ngIf="photo" [src]="photo" class="topbar-avatar">
+          <ion-icon *ngIf="!photo" name="person-circle-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content class="formations-content">
+    <div class="hero-card">
+      <div class="hero-icon"><ion-icon name="school-outline"></ion-icon></div>
+      <div class="hero-text">
+        <h2>Développez vos compétences</h2>
+        <p>Accédez à vos formations, consultez les détails et suivez votre progression.</p>
+      </div>
+    </div>
+
+    <div class="nav-card" routerLink="/toutes-formations">
+      <div class="nav-card-top">
+        <div class="nav-icon nav-icon-blue"><ion-icon name="apps-outline"></ion-icon></div>
+        <div class="nav-text">
+          <h3>Toutes les formations</h3>
+          <p>Consultez la liste complète des formations disponibles (doctorat, modules, ateliers, ...).</p>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="chev"></ion-icon>
+      </div>
+      <div class="nav-link nav-link-blue">
+        <ion-icon name="school-outline"></ion-icon>
+        Explorer
+      </div>
+    </div>
+
+    <div class="nav-card" routerLink="/mes-formations-f">
+      <div class="nav-card-top">
+        <div class="nav-icon nav-icon-violet"><ion-icon name="document-text-outline"></ion-icon></div>
+        <div class="nav-text">
+          <h3>Mes formations</h3>
+          <p>Accédez à vos formations inscrites et gérez votre parcours.</p>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="chev"></ion-icon>
+      </div>
+      <div class="nav-link nav-link-violet">
+        <ion-icon name="person-outline"></ion-icon>
+        Voir mes formations
+      </div>
+    </div>
+
+    <div class="nav-card" routerLink="/contact">
+      <div class="nav-card-top">
+        <div class="nav-icon nav-icon-green"><ion-icon name="checkmark-circle-outline"></ion-icon></div>
+        <div class="nav-text">
+          <h3>Mes présences</h3>
+          <p>Consultez et suivez vos feuilles de présence pour chaque formation.</p>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="chev"></ion-icon>
+      </div>
+      <div class="nav-link nav-link-green">
+        <ion-icon name="calendar-outline"></ion-icon>
+        Voir mes présences
+      </div>
+    </div>
+  </ion-content>
+</div>

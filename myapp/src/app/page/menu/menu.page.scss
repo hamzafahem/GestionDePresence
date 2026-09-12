@@ -1,0 +1,145 @@
+.topbar-avatar-btn {
+  .topbar-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+}
+
+.app-header {
+  ion-toolbar {
+    --background: #14a06d;
+    --color: #fff;
+  }
+  ion-back-button {
+    --color: #fff;
+  }
+  ion-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+
+    ion-icon {
+      font-size: 1.2em;
+    }
+  }
+}
+
+.formations-content {
+  --background: #f4f8f6;
+
+  .hero-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 16px;
+    padding: 18px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #e3f5ec, #f4f8f6);
+
+    .hero-icon {
+      flex-shrink: 0;
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: #e3f5ec;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      ion-icon {
+        font-size: 1.6em;
+        color: #14a06d;
+      }
+    }
+
+    .hero-text {
+      h2 {
+        margin: 0 0 4px;
+        font-size: 1em;
+        font-weight: 700;
+        color: #1c2a24;
+      }
+      p {
+        margin: 0;
+        font-size: 0.8em;
+        color: #6b7c74;
+      }
+    }
+  }
+
+  .nav-card {
+    margin: 0 16px 16px;
+    background: #fff;
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 2px 10px rgba(20, 40, 30, 0.06);
+    cursor: pointer;
+
+    .nav-card-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .nav-icon {
+      flex-shrink: 0;
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      ion-icon {
+        font-size: 1.35em;
+        color: #fff;
+      }
+
+      &.nav-icon-blue { background: #3f7fe0; }
+      &.nav-icon-violet { background: #9b6bff; }
+      &.nav-icon-green { background: #14a06d; }
+    }
+
+    .nav-text {
+      flex: 1;
+      min-width: 0;
+
+      h3 {
+        margin: 0 0 3px;
+        font-size: 0.95em;
+        font-weight: 700;
+        color: #1c2a24;
+      }
+      p {
+        margin: 0;
+        font-size: 0.78em;
+        color: #8a9690;
+        line-height: 1.35;
+      }
+    }
+
+    .chev {
+      color: #b6c0bb;
+      flex-shrink: 0;
+      margin-top: 4px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin: 12px 0 0 54px;
+      font-size: 0.82em;
+      font-weight: 700;
+
+      ion-icon { font-size: 1.1em; }
+
+      &.nav-link-blue { color: #3f7fe0; }
+      &.nav-link-violet { color: #9b6bff; }
+      &.nav-link-green { color: #14a06d; }
+    }
+  }
+}

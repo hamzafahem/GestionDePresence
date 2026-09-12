@@ -1,0 +1,117 @@
+<ion-content [fullscreen]="true">
+  <ion-grid>
+    <img class="img" src="../../../../assets/uh1_logo.png" alt="">
+  </ion-grid>
+</ion-content>
+
+<ion-footer class="ion-no-border animated bounceInup" >
+  <ion-row>
+    <!-- rah sayebt variable dyal lon dyal smeyto bl -->
+    <ion-fab  horizontal="end"vertical="top">
+      <ion-fab-button color="dark" (click)="SignUp()">
+        <ion-icon name="arrow-forward-outline" ></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+    <ion-list lines="full">
+      <ion-list-header class="ion-margin">
+        <ion-label >Sign Up</ion-label>
+      </ion-list-header>
+
+
+        <ion-item-group class="ion-margin-horizontal ion-margin-bottom">
+          <form [formGroup]="form">
+          <div class="ion-margin-vertical" >
+               <ion-item>
+               <ion-input type="text" placeholder="Enter Your Name" formControlName="name" minlength="2" maxlength="20"></ion-input>
+               </ion-item>
+               <ion-text *ngIf="!form?.get('phone')?.valid && form?.get('phone')?.touched">
+               <ion-text  class="error" *ngIf="form.get('phone')?.hasError('required')" color="danger">
+                Please Enter Your name
+               </ion-text>
+               <ion-text class="error"
+               *ngIf="form.get('phone')?.hasError('minlength') && !form.get('phone')?.hasError('required')" color="danger">
+                Please Enter More than 2 Character
+               </ion-text>
+               </ion-text>
+          </div>
+
+          <div class="ion-margin-vertical" >
+            <ion-item>
+            <ion-input type="email" placeholder="Enter Email ID" formControlName="email" ></ion-input>
+            </ion-item>
+            <ion-text *ngIf="!form?.get('email')?.valid && form?.get('email')?.touched">
+            <ion-text  class="error" *ngIf="form.get('email')?.hasError('required')" color="danger">
+             Please Enter Email Address
+            </ion-text>
+            <ion-text class="error"
+            *ngIf="form.get('Email')?.hasError('email') && !form.get('email')?.hasError('required')" color="danger">
+             Please Enter Valid Mobile Number
+            </ion-text>
+            </ion-text>
+       </div>
+       <div class="ion-margin-vertical" >
+        <ion-item>
+          <ion-button slot="end" fill="clear" color="primary" (click)="verify()">VERIFY</ion-button>
+        <ion-input type="tel" placeholder="Enter Number Phone" formControlName="phone" minlength="10" maxlength="10"></ion-input>
+        </ion-item>
+        <ion-text *ngIf="!form?.get('phone')?.valid && form?.get('phone')?.touched">
+        <ion-text  class="error" *ngIf="form.get('phone')?.hasError('required')" color="danger">
+         Please Enter Mobile Number
+        </ion-text>
+        <ion-text class="error"
+        *ngIf="form.get('phone')?.hasError('minlength') && !form.get('phone')?.hasError('required')" color="danger">
+         Please Enter Valid Mobile Number
+        </ion-text>
+        </ion-text>
+       </div>
+
+
+          <div class="ion-margin-vertical" >
+            <ion-item>
+                      <ion-icon name="eye-outline" slot="end" color="medium" (click)="changetype()"
+                      [name] ="type ? 'eye-outline' : 'eye-off-outline'"></ion-icon>
+
+            <ion-input type="password" placeholder="Enter password" formControlName="password" [type]="type ?'password':'text'"></ion-input>
+            </ion-item>
+            <ion-text *ngIf="!form?.get('password')?.valid && form?.get('password')?.touched">
+            <ion-text  class="error" *ngIf="form.get('password')?.hasError('required')" color="danger">
+             Please password Here
+            </ion-text>
+            <ion-text class="error"
+            *ngIf="form.get('password')?.hasError('minlength') && !form.get('password')?.hasError('required')" color="danger">
+            Please Enter 8 Character Valid Password
+            </ion-text>
+            </ion-text>
+           </div>
+
+
+           </form>
+        </ion-item-group>
+
+
+      <ion-item>
+
+
+            <ion-item lines="none" class="ion-padding-top"  >
+             <ion-text (click)="forgetpassword()" color="primary" slot="start">
+            Already have an Account ?
+            </ion-text>
+            </ion-item>
+
+            <ion-item lines="none" class="ion-padding-top"  >
+            <ion-text  routerLink="/sign-in" color="dark" slot="end">
+            Sign In
+            </ion-text>
+            </ion-item>
+
+
+
+
+</ion-item>
+
+
+
+
+    </ion-list>
+  </ion-row>
+</ion-footer>

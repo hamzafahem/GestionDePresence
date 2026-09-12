@@ -1,0 +1,66 @@
+server:
+  port: 3333
+  servlet:
+    context-path: /api
+
+spring:
+  application:
+    name: mpresence-backend
+  profiles:
+    active: dev
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+
+app:
+  base-url: "http://localhost:3333"
+  jwt:
+    secret: "changeme-super-secret-key-for-dev-only-please-rotate-in-prod-32bytes+"
+    expiration-ms: 86400000 # 24h
+  cors:
+    allowed-origins: "http://localhost:8100,http://localhost:4200,capacitor://localhost,http://localhost,https://localhost,http://192.168.11.171:8100"
+  uploads:
+    dir: "uploads/photos"
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:h2:mem:mpresence;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+---
+spring:
+  config:
+    activate:
+      on-profile: mysql
+  datasource:
+    url: jdbc:mysql://localhost:3306/mpresence?useSSL=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect

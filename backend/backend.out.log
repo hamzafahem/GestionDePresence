@@ -1,0 +1,8293 @@
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.4)
+
+2026-09-08T14:27:24.450+01:00  INFO 15488 --- [mpresence-backend] [           main] ma.uh1.mpresence.MpresenceApplication    : Starting MpresenceApplication v0.0.1-SNAPSHOT using Java 17.0.12 with PID 15488 (C:\Users\Hamza Maanaoui\Desktop\arifamlo\backend\target\mpresence-backend.jar started by Hamza Maanaoui in C:\Users\Hamza Maanaoui\Desktop\arifamlo\backend)
+2026-09-08T14:27:24.455+01:00  INFO 15488 --- [mpresence-backend] [           main] ma.uh1.mpresence.MpresenceApplication    : The following 1 profile is active: "dev"
+2026-09-08T14:27:26.740+01:00  INFO 15488 --- [mpresence-backend] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-09-08T14:27:26.991+01:00  INFO 15488 --- [mpresence-backend] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 227 ms. Found 15 JPA repository interfaces.
+2026-09-08T14:27:28.794+01:00  INFO 15488 --- [mpresence-backend] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 3333 (http)
+2026-09-08T14:27:28.835+01:00  INFO 15488 --- [mpresence-backend] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-09-08T14:27:28.836+01:00  INFO 15488 --- [mpresence-backend] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.30]
+2026-09-08T14:27:28.938+01:00  INFO 15488 --- [mpresence-backend] [           main] o.a.c.c.C.[Tomcat].[localhost].[/api]    : Initializing Spring embedded WebApplicationContext
+2026-09-08T14:27:28.941+01:00  INFO 15488 --- [mpresence-backend] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 4364 ms
+2026-09-08T14:27:29.008+01:00  INFO 15488 --- [mpresence-backend] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-09-08T14:27:29.676+01:00  INFO 15488 --- [mpresence-backend] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:mpresence user=SA
+2026-09-08T14:27:29.680+01:00  INFO 15488 --- [mpresence-backend] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-09-08T14:27:29.704+01:00  INFO 15488 --- [mpresence-backend] [           main] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:mpresence'
+2026-09-08T14:27:29.950+01:00  INFO 15488 --- [mpresence-backend] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-09-08T14:27:30.145+01:00  INFO 15488 --- [mpresence-backend] [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.5.3.Final
+2026-09-08T14:27:30.245+01:00  INFO 15488 --- [mpresence-backend] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-09-08T14:27:31.082+01:00  INFO 15488 --- [mpresence-backend] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-09-08T14:27:34.238+01:00  INFO 15488 --- [mpresence-backend] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+Hibernate: 
+    drop table if exists annees_universitaires cascade 
+Hibernate: 
+    drop table if exists demandes cascade 
+Hibernate: 
+    drop table if exists doctorants cascade 
+Hibernate: 
+    drop table if exists formation_interne_participants cascade 
+Hibernate: 
+    drop table if exists formations cascade 
+Hibernate: 
+    drop table if exists formations_internes cascade 
+Hibernate: 
+    drop table if exists inscriptions cascade 
+Hibernate: 
+    drop table if exists modules_formation cascade 
+Hibernate: 
+    drop table if exists notifications cascade 
+Hibernate: 
+    drop table if exists participations cascade 
+Hibernate: 
+    drop table if exists permissions cascade 
+Hibernate: 
+    drop table if exists publications_recherche cascade 
+Hibernate: 
+    drop table if exists reinscriptions cascade 
+Hibernate: 
+    drop table if exists rendez_vous cascade 
+Hibernate: 
+    drop table if exists role_permissions cascade 
+Hibernate: 
+    drop table if exists roles cascade 
+Hibernate: 
+    drop table if exists user_roles cascade 
+Hibernate: 
+    drop table if exists users cascade 
+Hibernate: 
+    create table annees_universitaires (
+        active boolean not null,
+        date_debut date,
+        date_fin date,
+        id bigint generated by default as identity,
+        libelle varchar(255) not null unique,
+        primary key (id)
+    )
+Hibernate: 
+    create table demandes (
+        date_creation timestamp(6) not null,
+        date_traitement timestamp(6),
+        doctorant_id bigint not null,
+        id bigint generated by default as identity,
+        traite_par_user_id bigint,
+        description varchar(2000),
+        reponse varchar(2000),
+        objet varchar(255) not null,
+        type varchar(255) not null,
+        statut enum ('APPROUVEE','EN_ATTENTE','REJETEE') not null,
+        primary key (id)
+    )
+Hibernate: 
+    create table doctorants (
+        date_naissance date,
+        date_creation timestamp(6) not null,
+        encadrant_user_id bigint,
+        formation_id bigint,
+        id bigint generated by default as identity,
+        details varchar(2000),
+        cin varchar(255) unique,
+        cne varchar(255) unique,
+        code_apogee varchar(255) not null unique,
+        email varchar(255) unique,
+        filiere varchar(255),
+        mobile varchar(255),
+        nom varchar(255) not null,
+        password varchar(255),
+        photo varchar(255),
+        prenom varchar(255) not null,
+        statut enum ('ABANDONNE','ACTIF','DIPLOME','SUSPENDU') not null,
+        primary key (id)
+    )
+Hibernate: 
+    create table formation_interne_participants (
+        doctorant_id bigint not null,
+        formation_interne_id bigint not null,
+        primary key (doctorant_id, formation_interne_id)
+    )
+Hibernate: 
+    create table formations (
+        date_debut date,
+        date_fin date,
+        annee_universitaire_id bigint,
+        date_creation timestamp(6) not null,
+        id bigint generated by default as identity,
+        description varchar(2000),
+        intitule varchar(255) not null,
+        primary key (id)
+    )
+Hibernate: 
+    create table formations_internes (
+        capacite_max integer,
+        date_debut date,
+        date_fin date,
+        formateur_user_id bigint,
+        id bigint generated by default as identity,
+        description varchar(2000),
+        intitule varchar(255) not null,
+        lieu varchar(255),
+        primary key (id)
+    )
+Hibernate: 
+    create table inscriptions (
+        date_creation timestamp(6) not null,
+        date_traitement timestamp(6),
+        doctorant_id bigint not null,
+        formation_id bigint not null,
+        id bigint generated by default as identity,
+        traite_par_user_id bigint,
+        statut enum ('APPROUVEE','EN_ATTENTE','REJETEE') not null,
+        primary key (id)
+    )
+Hibernate: 
+    create table modules_formation (
+        formation_id bigint not null,
+        id bigint generated by default as identity,
+        nom varchar(255) not null,
+        primary key (id)
+    )
+Hibernate: 
+    create table notifications (
+        lu boolean not null,
+        date_creation timestamp(6) not null,
+        doctorant_id bigint,
+        id bigint generated by default as identity,
+        message varchar(2000) not null,
+        titre varchar(255) not null,
+        primary key (id)
+    )
+Hibernate: 
+    create table participations (
+        date_participation timestamp(6) not null,
+        doctorant_id bigint not null,
+        id bigint generated by default as identity,
+        module_id bigint not null,
+        recorded_by_user_id bigint,
+        code_scanned varchar(255),
+        primary key (id),
+        unique (doctorant_id, module_id)
+    )
+Hibernate: 
+    create table permissions (
+        id bigint generated by default as identity,
+        name varchar(255) not null unique,
+        primary key (id)
+    )
+Hibernate: 
+    create table publications_recherche (
+        date_publication date,
+        date_creation timestamp(6) not null,
+        doctorant_id bigint not null,
+        id bigint generated by default as identity,
+        description varchar(2000),
+        lien varchar(255),
+        reference varchar(255),
+        titre varchar(255) not null,
+        type enum ('ARTICLE','BREVET','PROCEEDING') not null,
+        primary key (id)
+    )
+Hibernate: 
+    create table reinscriptions (
+        annee_universitaire_id bigint not null,
+        date_creation timestamp(6) not null,
+        date_traitement timestamp(6),
+        doctorant_id bigint not null,
+        id bigint generated by default as identity,
+        traite_par_user_id bigint,
+        commentaire varchar(2000),
+        statut enum ('APPROUVEE','EN_ATTENTE','REJETEE') not null,
+        primary key (id),
+        unique (doctorant_id, annee_universitaire_id)
+    )
+Hibernate: 
+    create table rendez_vous (
+        date_creation timestamp(6) not null,
+        date_heure timestamp(6) not null,
+        doctorant_id bigint not null,
+        formateur_user_id bigint,
+        id bigint generated by default as identity,
+        commentaire varchar(2000),
+        lieu varchar(255),
+        objet varchar(255) not null,
+        statut enum ('ANNULE','CONFIRME','PLANIFIE','TERMINE') not null,
+        primary key (id)
+    )
+Hibernate: 
+    create table role_permissions (
+        permission_id bigint not null,
+        role_id bigint not null,
+        primary key (permission_id, role_id)
+    )
+Hibernate: 
+    create table roles (
+        id bigint generated by default as identity,
+        name varchar(255) not null unique,
+        primary key (id)
+    )
+Hibernate: 
+    create table user_roles (
+        role_id bigint not null,
+        user_id bigint not null,
+        primary key (role_id, user_id)
+    )
+Hibernate: 
+    create table users (
+        account_deactivated boolean,
+        age integer,
+        app_notification boolean,
+        enabled boolean not null,
+        security_enabled boolean,
+        sms_email_notification boolean,
+        id bigint generated by default as identity,
+        cin varchar(20) not null unique,
+        address varchar(255),
+        email varchar(255) unique,
+        nom_fr varchar(255) not null,
+        password varchar(255) not null,
+        phone varchar(255),
+        photo varchar(255),
+        prenom_fr varchar(255) not null,
+        sexe varchar(255),
+        primary key (id)
+    )
+Hibernate: 
+    alter table if exists demandes 
+       add constraint FKen5dcjn3i7gwmrki6fbss1hx8 
+       foreign key (doctorant_id) 
+       references doctorants
+Hibernate: 
+    alter table if exists demandes 
+       add constraint FKmre2l9i6kd1a9c5xtrogrkpys 
+       foreign key (traite_par_user_id) 
+       references users
+Hibernate: 
+    alter table if exists doctorants 
+       add constraint FKn9wud46aqq7naobne9xxqbcsv 
+       foreign key (encadrant_user_id) 
+       references users
+Hibernate: 
+    alter table if exists doctorants 
+       add constraint FK2xc04sjfi2kpj9pgshtmor451 
+       foreign key (formation_id) 
+       references formations
+Hibernate: 
+    alter table if exists formation_interne_participants 
+       add constraint FK6oxv8k2f7sm1hoijw0k5vusri 
+       foreign key (doctorant_id) 
+       references doctorants
+Hibernate: 
+    alter table if exists formation_interne_participants 
+       add constraint FKfq0hcclui2iktswmkavshhrhu 
+       foreign key (formation_interne_id) 
+       references formations_internes
+Hibernate: 
+    alter table if exists formations 
+       add constraint FK25nrmsk74ywehnbbsdxiyef18 
+       foreign key (annee_universitaire_id) 
+       references annees_universitaires
+Hibernate: 
+    alter table if exists formations_internes 
+       add constraint FKcrgute0dpyyr5gt6m6rpsco6d 
+       foreign key (formateur_user_id) 
+       references users
+Hibernate: 
+    alter table if exists inscriptions 
+       add constraint FKrtv2eavpnxdmehwuv7g1ajqwp 
+       foreign key (doctorant_id) 
+       references doctorants
+Hibernate: 
+    alter table if exists inscriptions 
+       add constraint FK8ip4yxmv05y8ci40w1we1egc1 
+       foreign key (formation_id) 
+       references formations
+Hibernate: 
+    alter table if exists inscriptions 
+       add constraint FK2ytjs86ihi2i7fetqhh0qe6sv 
+       foreign key (traite_par_user_id) 
+       references users
+Hibernate: 
+    alter table if exists modules_formation 
+       add constraint FKcxqplruj2egpc41o2yhy3w936 
+       foreign key (formation_id) 
+       references formations
+Hibernate: 
+    alter table if exists notifications 
+       add constraint FKv77uakow1cblycu6uj4vvtpm 
+       foreign key (doctorant_id) 
+       references doctorants
+Hibernate: 
+    alter table if exists participations 
+       add constraint FKgqnjj4c06i5mi8w33jpaoi6ih 
+       foreign key (doctorant_id) 
+       references doctorants
+Hibernate: 
+    alter table if exists participations 
+       add constraint FKmib7gck3rb9feqh5uw26hsudd 
+       foreign key (module_id) 
+       references modules_formation
+Hibernate: 
+    alter table if exists participations 
+       add constraint FK2g31hndv48ilsuhd55sgpleco 
+       foreign key (recorded_by_user_id) 
+       references users
+Hibernate: 
+    alter table if exists publications_recherche 
+       add constraint FK3f5fuc2y2xxckpgoahr6ecp6 
+       foreign key (doctorant_id) 
+       references doctorants
+Hibernate: 
+    alter table if exists reinscriptions 
+       add constraint FKqghtb0o7c3jg4fjxb9jr8k3sp 
+       foreign key (annee_universitaire_id) 
+       references annees_universitaires
+Hibernate: 
+    alter table if exists reinscriptions 
+       add constraint FK53unm8x6gt9ngr7hvvgx37vwx 
+       foreign key (doctorant_id) 
+       references doctorants
+Hibernate: 
+    alter table if exists reinscriptions 
+       add constraint FK66rgwe9209utlbdep4mys2y63 
+       foreign key (traite_par_user_id) 
+       references users
+Hibernate: 
+    alter table if exists rendez_vous 
+       add constraint FK31dv98bm6mpluh9mdinfwyyh0 
+       foreign key (doctorant_id) 
+       references doctorants
+Hibernate: 
+    alter table if exists rendez_vous 
+       add constraint FKlngkg0b7knxq89xgkiu4g6q6c 
+       foreign key (formateur_user_id) 
+       references users
+Hibernate: 
+    alter table if exists role_permissions 
+       add constraint FKegdk29eiy7mdtefy5c7eirr6e 
+       foreign key (permission_id) 
+       references permissions
+Hibernate: 
+    alter table if exists role_permissions 
+       add constraint FKn5fotdgk8d1xvo8nav9uv3muc 
+       foreign key (role_id) 
+       references roles
+Hibernate: 
+    alter table if exists user_roles 
+       add constraint FKh8ciramu9cc9q3qcqiv4ue8a6 
+       foreign key (role_id) 
+       references roles
+Hibernate: 
+    alter table if exists user_roles 
+       add constraint FKhfh9dx7w3ubf1co1vdev94g3f 
+       foreign key (user_id) 
+       references users
+2026-09-08T14:27:34.495+01:00  INFO 15488 --- [mpresence-backend] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-09-08T14:27:36.231+01:00  WARN 15488 --- [mpresence-backend] [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-09-08T14:27:36.327+01:00  INFO 15488 --- [mpresence-backend] [           main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-09-08T14:27:36.329+01:00  WARN 15488 --- [mpresence-backend] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2026-09-08T14:27:37.817+01:00  INFO 15488 --- [mpresence-backend] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 3333 (http) with context path '/api'
+2026-09-08T14:27:37.864+01:00  INFO 15488 --- [mpresence-backend] [           main] ma.uh1.mpresence.MpresenceApplication    : Started MpresenceApplication in 14.724 seconds (process running for 16.191)
+Hibernate: 
+    select
+        count(*) 
+    from
+        users u1_0
+Hibernate: 
+    insert 
+    into
+        permissions
+        (name, id) 
+    values
+        (?, default)
+Hibernate: 
+    insert 
+    into
+        permissions
+        (name, id) 
+    values
+        (?, default)
+Hibernate: 
+    insert 
+    into
+        permissions
+        (name, id) 
+    values
+        (?, default)
+Hibernate: 
+    insert 
+    into
+        roles
+        (name, id) 
+    values
+        (?, default)
+Hibernate: 
+    insert 
+    into
+        role_permissions
+        (role_id, permission_id) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        role_permissions
+        (role_id, permission_id) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        role_permissions
+        (role_id, permission_id) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        roles
+        (name, id) 
+    values
+        (?, default)
+Hibernate: 
+    insert 
+    into
+        role_permissions
+        (role_id, permission_id) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        users
+        (address, age, cin, email, enabled, nom_fr, password, phone, photo, prenom_fr, account_deactivated, app_notification, security_enabled, sms_email_notification, sexe, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        user_roles
+        (user_id, role_id) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        users
+        (address, age, cin, email, enabled, nom_fr, password, phone, photo, prenom_fr, account_deactivated, app_notification, security_enabled, sms_email_notification, sexe, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        user_roles
+        (user_id, role_id) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        annees_universitaires
+        (active, date_debut, date_fin, libelle, id) 
+    values
+        (?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        formations
+        (annee_universitaire_id, date_creation, date_debut, date_fin, description, intitule, id) 
+    values
+        (?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        modules_formation
+        (formation_id, nom, id) 
+    values
+        (?, ?, default)
+Hibernate: 
+    insert 
+    into
+        modules_formation
+        (formation_id, nom, id) 
+    values
+        (?, ?, default)
+Hibernate: 
+    insert 
+    into
+        doctorants
+        (cin, cne, code_apogee, date_creation, date_naissance, details, email, encadrant_user_id, filiere, formation_id, mobile, nom, password, photo, prenom, statut, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        doctorants
+        (cin, cne, code_apogee, date_creation, date_naissance, details, email, encadrant_user_id, filiere, formation_id, mobile, nom, password, photo, prenom, statut, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        doctorants
+        (cin, cne, code_apogee, date_creation, date_naissance, details, email, encadrant_user_id, filiere, formation_id, mobile, nom, password, photo, prenom, statut, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        participations
+        (code_scanned, date_participation, doctorant_id, module_id, recorded_by_user_id, id) 
+    values
+        (?, ?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        demandes
+        (date_creation, date_traitement, description, doctorant_id, objet, reponse, statut, traite_par_user_id, type, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        reinscriptions
+        (annee_universitaire_id, commentaire, date_creation, date_traitement, doctorant_id, statut, traite_par_user_id, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        publications_recherche
+        (date_creation, date_publication, description, doctorant_id, lien, reference, titre, type, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        rendez_vous
+        (commentaire, date_creation, date_heure, doctorant_id, formateur_user_id, lieu, objet, statut, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        notifications
+        (date_creation, doctorant_id, lu, message, titre, id) 
+    values
+        (?, ?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        formations_internes
+        (capacite_max, date_debut, date_fin, description, formateur_user_id, intitule, lieu, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    insert 
+    into
+        formation_interne_participants
+        (formation_interne_id, doctorant_id) 
+    values
+        (?, ?)
+2026-09-08T14:28:01.788+01:00  INFO 15488 --- [mpresence-backend] [nio-3333-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/api]    : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-08T14:28:01.792+01:00  INFO 15488 --- [mpresence-backend] [nio-3333-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-09-08T14:28:01.806+01:00  INFO 15488 --- [mpresence-backend] [nio-3333-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 8 ms
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    where
+        u1_0.cin=?
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.annee_universitaire_id,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule 
+    from
+        formations f1_0
+Hibernate: 
+    select
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle 
+    from
+        annees_universitaires au1_0 
+    where
+        au1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    where
+        u1_0.cin=?
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle 
+    from
+        annees_universitaires au1_0 
+    where
+        au1_0.active
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    where
+        u1_0.cin=?
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    where
+        u1_0.cin=?
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    where
+        u1_0.cin=?
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle 
+    from
+        annees_universitaires au1_0 
+    where
+        au1_0.active
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    where
+        u1_0.cin=?
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        u1_0.id=?
+Hibernate: 
+    update
+        users 
+    set
+        address=?,
+        age=?,
+        cin=?,
+        email=?,
+        enabled=?,
+        nom_fr=?,
+        password=?,
+        phone=?,
+        photo=?,
+        prenom_fr=?,
+        account_deactivated=?,
+        app_notification=?,
+        security_enabled=?,
+        sms_email_notification=?,
+        sexe=? 
+    where
+        id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    where
+        u1_0.cin=?
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        u1_0.id=?
+Hibernate: 
+    update
+        users 
+    set
+        address=?,
+        age=?,
+        cin=?,
+        email=?,
+        enabled=?,
+        nom_fr=?,
+        password=?,
+        phone=?,
+        photo=?,
+        prenom_fr=?,
+        account_deactivated=?,
+        app_notification=?,
+        security_enabled=?,
+        sms_email_notification=?,
+        sexe=? 
+    where
+        id=?
+2026-09-08T14:28:22.057+01:00  WARN 15488 --- [mpresence-backend] [nio-3333-exec-7] o.a.c.util.SessionIdGeneratorBase        : Creation of SecureRandom instance for session ID generation using [SHA1PRNG] took [136] milliseconds.
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    where
+        u1_0.cin=?
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        count(*) 
+    from
+        formations f1_0
+Hibernate: 
+    select
+        count(f1_0.id) 
+    from
+        formations f1_0 
+    where
+        f1_0.date_creation>?
+Hibernate: 
+    select
+        count(*) 
+    from
+        doctorants d1_0
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        doctorants d1_0 
+    where
+        d1_0.date_creation>?
+Hibernate: 
+    select
+        count(*) 
+    from
+        rendez_vous rv1_0
+Hibernate: 
+    select
+        rv1_0.id,
+        rv1_0.commentaire,
+        rv1_0.date_creation,
+        rv1_0.date_heure,
+        rv1_0.doctorant_id,
+        rv1_0.formateur_user_id,
+        rv1_0.lieu,
+        rv1_0.objet,
+        rv1_0.statut 
+    from
+        rendez_vous rv1_0 
+    where
+        rv1_0.date_creation>?
+Hibernate: 
+    select
+        d1_0.id,
+        d1_0.cin,
+        d1_0.cne,
+        d1_0.code_apogee,
+        d1_0.date_creation,
+        d1_0.date_naissance,
+        d1_0.details,
+        d1_0.email,
+        e1_0.id,
+        e1_0.address,
+        e1_0.age,
+        e1_0.cin,
+        e1_0.email,
+        e1_0.enabled,
+        e1_0.nom_fr,
+        e1_0.password,
+        e1_0.phone,
+        e1_0.photo,
+        e1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name,
+        e1_0.account_deactivated,
+        e1_0.app_notification,
+        e1_0.security_enabled,
+        e1_0.sms_email_notification,
+        e1_0.sexe,
+        d1_0.filiere,
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule,
+        d1_0.mobile,
+        d1_0.nom,
+        d1_0.password,
+        d1_0.photo,
+        d1_0.prenom,
+        d1_0.statut 
+    from
+        doctorants d1_0 
+    left join
+        users e1_0 
+            on e1_0.id=d1_0.encadrant_user_id 
+    left join
+        user_roles r1_0 
+            on e1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    left join
+        formations f1_0 
+            on f1_0.id=d1_0.formation_id 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        d1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        count(*) 
+    from
+        demandes d1_0
+Hibernate: 
+    select
+        d1_0.id,
+        d1_0.date_creation,
+        d1_0.date_traitement,
+        d1_0.description,
+        d1_0.doctorant_id,
+        d1_0.objet,
+        d1_0.reponse,
+        d1_0.statut,
+        d1_0.traite_par_user_id,
+        d1_0.type 
+    from
+        demandes d1_0 
+    where
+        d1_0.date_creation>?
+Hibernate: 
+    select
+        d1_0.id,
+        d1_0.date_creation,
+        d1_0.date_traitement,
+        d1_0.description,
+        d1_0.doctorant_id,
+        d1_0.objet,
+        d1_0.reponse,
+        d1_0.statut,
+        d1_0.traite_par_user_id,
+        d1_0.type 
+    from
+        demandes d1_0 
+    where
+        d1_0.date_creation>?
+Hibernate: 
+    select
+        r1_0.id,
+        r1_0.annee_universitaire_id,
+        r1_0.commentaire,
+        r1_0.date_creation,
+        r1_0.date_traitement,
+        r1_0.doctorant_id,
+        r1_0.statut,
+        r1_0.traite_par_user_id 
+    from
+        reinscriptions r1_0 
+    where
+        r1_0.date_creation>?
+Hibernate: 
+    select
+        d1_0.id,
+        d1_0.cin,
+        d1_0.cne,
+        d1_0.code_apogee,
+        d1_0.date_creation,
+        d1_0.date_naissance,
+        d1_0.details,
+        d1_0.email,
+        e1_0.id,
+        e1_0.address,
+        e1_0.age,
+        e1_0.cin,
+        e1_0.email,
+        e1_0.enabled,
+        e1_0.nom_fr,
+        e1_0.password,
+        e1_0.phone,
+        e1_0.photo,
+        e1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name,
+        e1_0.account_deactivated,
+        e1_0.app_notification,
+        e1_0.security_enabled,
+        e1_0.sms_email_notification,
+        e1_0.sexe,
+        d1_0.filiere,
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule,
+        d1_0.mobile,
+        d1_0.nom,
+        d1_0.password,
+        d1_0.photo,
+        d1_0.prenom,
+        d1_0.statut 
+    from
+        doctorants d1_0 
+    left join
+        users e1_0 
+            on e1_0.id=d1_0.encadrant_user_id 
+    left join
+        user_roles r1_0 
+            on e1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    left join
+        formations f1_0 
+            on f1_0.id=d1_0.formation_id 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        d1_0.id=?
+Hibernate: 
+    select
+        p1_0.id,
+        p1_0.code_scanned,
+        p1_0.date_participation,
+        p1_0.doctorant_id,
+        p1_0.module_id,
+        p1_0.recorded_by_user_id 
+    from
+        participations p1_0 
+    where
+        p1_0.date_participation>?
+Hibernate: 
+    select
+        mf1_0.id,
+        mf1_0.formation_id,
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule,
+        mf1_0.nom 
+    from
+        modules_formation mf1_0 
+    join
+        formations f1_0 
+            on f1_0.id=mf1_0.formation_id 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        mf1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        rv1_0.id,
+        rv1_0.commentaire,
+        rv1_0.date_creation,
+        rv1_0.date_heure,
+        rv1_0.doctorant_id,
+        rv1_0.formateur_user_id,
+        rv1_0.lieu,
+        rv1_0.objet,
+        rv1_0.statut 
+    from
+        rendez_vous rv1_0 
+    where
+        rv1_0.date_creation>?
+Hibernate: 
+    select
+        pr1_0.id,
+        pr1_0.date_creation,
+        pr1_0.date_publication,
+        pr1_0.description,
+        pr1_0.doctorant_id,
+        pr1_0.lien,
+        pr1_0.reference,
+        pr1_0.titre,
+        pr1_0.type 
+    from
+        publications_recherche pr1_0 
+    where
+        pr1_0.date_creation>?
+Hibernate: 
+    select
+        d1_0.id,
+        d1_0.date_creation,
+        d1_0.date_traitement,
+        d1_0.description,
+        d1_0.doctorant_id,
+        d1_0.objet,
+        d1_0.reponse,
+        d1_0.statut,
+        d1_0.traite_par_user_id,
+        d1_0.type 
+    from
+        demandes d1_0 
+    order by
+        d1_0.date_creation desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        rv1_0.id,
+        rv1_0.commentaire,
+        rv1_0.date_creation,
+        rv1_0.date_heure,
+        rv1_0.doctorant_id,
+        rv1_0.formateur_user_id,
+        rv1_0.lieu,
+        rv1_0.objet,
+        rv1_0.statut 
+    from
+        rendez_vous rv1_0 
+    order by
+        rv1_0.date_creation desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        pr1_0.id,
+        pr1_0.date_creation,
+        pr1_0.date_publication,
+        pr1_0.description,
+        pr1_0.doctorant_id,
+        pr1_0.lien,
+        pr1_0.reference,
+        pr1_0.titre,
+        pr1_0.type 
+    from
+        publications_recherche pr1_0 
+    order by
+        pr1_0.date_creation desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        n1_0.id,
+        n1_0.date_creation,
+        n1_0.doctorant_id,
+        n1_0.lu,
+        n1_0.message,
+        n1_0.titre 
+    from
+        notifications n1_0 
+    order by
+        n1_0.date_creation desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        n1_0.id,
+        n1_0.date_creation,
+        n1_0.doctorant_id,
+        n1_0.lu,
+        n1_0.message,
+        n1_0.titre 
+    from
+        notifications n1_0
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        rv1_0.id,
+        rv1_0.commentaire,
+        rv1_0.date_creation,
+        rv1_0.date_heure,
+        rv1_0.doctorant_id,
+        rv1_0.formateur_user_id,
+        rv1_0.lieu,
+        rv1_0.objet,
+        rv1_0.statut 
+    from
+        rendez_vous rv1_0
+Hibernate: 
+    select
+        d1_0.id,
+        d1_0.cin,
+        d1_0.cne,
+        d1_0.code_apogee,
+        d1_0.date_creation,
+        d1_0.date_naissance,
+        d1_0.details,
+        d1_0.email,
+        e1_0.id,
+        e1_0.address,
+        e1_0.age,
+        e1_0.cin,
+        e1_0.email,
+        e1_0.enabled,
+        e1_0.nom_fr,
+        e1_0.password,
+        e1_0.phone,
+        e1_0.photo,
+        e1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name,
+        e1_0.account_deactivated,
+        e1_0.app_notification,
+        e1_0.security_enabled,
+        e1_0.sms_email_notification,
+        e1_0.sexe,
+        d1_0.filiere,
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule,
+        d1_0.mobile,
+        d1_0.nom,
+        d1_0.password,
+        d1_0.photo,
+        d1_0.prenom,
+        d1_0.statut 
+    from
+        doctorants d1_0 
+    left join
+        users e1_0 
+            on e1_0.id=d1_0.encadrant_user_id 
+    left join
+        user_roles r1_0 
+            on e1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    left join
+        formations f1_0 
+            on f1_0.id=d1_0.formation_id 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        d1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        fi1_0.id,
+        fi1_0.capacite_max,
+        fi1_0.date_debut,
+        fi1_0.date_fin,
+        fi1_0.description,
+        fi1_0.formateur_user_id,
+        fi1_0.intitule,
+        fi1_0.lieu 
+    from
+        formations_internes fi1_0
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        p1_0.formation_interne_id,
+        p1_1.id,
+        p1_1.cin,
+        p1_1.cne,
+        p1_1.code_apogee,
+        p1_1.date_creation,
+        p1_1.date_naissance,
+        p1_1.details,
+        p1_1.email,
+        e1_0.id,
+        e1_0.address,
+        e1_0.age,
+        e1_0.cin,
+        e1_0.email,
+        e1_0.enabled,
+        e1_0.nom_fr,
+        e1_0.password,
+        e1_0.phone,
+        e1_0.photo,
+        e1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p2_0.role_id,
+        p2_1.id,
+        p2_1.name,
+        e1_0.account_deactivated,
+        e1_0.app_notification,
+        e1_0.security_enabled,
+        e1_0.sms_email_notification,
+        e1_0.sexe,
+        p1_1.filiere,
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule,
+        p1_1.mobile,
+        p1_1.nom,
+        p1_1.password,
+        p1_1.photo,
+        p1_1.prenom,
+        p1_1.statut 
+    from
+        formation_interne_participants p1_0 
+    join
+        doctorants p1_1 
+            on p1_1.id=p1_0.doctorant_id 
+    left join
+        users e1_0 
+            on e1_0.id=p1_1.encadrant_user_id 
+    left join
+        user_roles r1_0 
+            on e1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p2_0 
+            on r1_1.id=p2_0.role_id 
+    left join
+        permissions p2_1 
+            on p2_1.id=p2_0.permission_id 
+    left join
+        formations f1_0 
+            on f1_0.id=p1_1.formation_id 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        p1_0.formation_interne_id=?
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        r1_0.id,
+        r1_0.annee_universitaire_id,
+        r1_0.commentaire,
+        r1_0.date_creation,
+        r1_0.date_traitement,
+        r1_0.doctorant_id,
+        r1_0.statut,
+        r1_0.traite_par_user_id 
+    from
+        reinscriptions r1_0
+Hibernate: 
+    select
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle 
+    from
+        annees_universitaires au1_0 
+    where
+        au1_0.id=?
+Hibernate: 
+    select
+        d1_0.id,
+        d1_0.cin,
+        d1_0.cne,
+        d1_0.code_apogee,
+        d1_0.date_creation,
+        d1_0.date_naissance,
+        d1_0.details,
+        d1_0.email,
+        e1_0.id,
+        e1_0.address,
+        e1_0.age,
+        e1_0.cin,
+        e1_0.email,
+        e1_0.enabled,
+        e1_0.nom_fr,
+        e1_0.password,
+        e1_0.phone,
+        e1_0.photo,
+        e1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name,
+        e1_0.account_deactivated,
+        e1_0.app_notification,
+        e1_0.security_enabled,
+        e1_0.sms_email_notification,
+        e1_0.sexe,
+        d1_0.filiere,
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule,
+        d1_0.mobile,
+        d1_0.nom,
+        d1_0.password,
+        d1_0.photo,
+        d1_0.prenom,
+        d1_0.statut 
+    from
+        doctorants d1_0 
+    left join
+        users e1_0 
+            on e1_0.id=d1_0.encadrant_user_id 
+    left join
+        user_roles r1_0 
+            on e1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    left join
+        formations f1_0 
+            on f1_0.id=d1_0.formation_id 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        d1_0.id=?
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        d1_0.id,
+        d1_0.cin,
+        d1_0.cne,
+        d1_0.code_apogee,
+        d1_0.date_creation,
+        d1_0.date_naissance,
+        d1_0.details,
+        d1_0.email,
+        d1_0.encadrant_user_id,
+        d1_0.filiere,
+        d1_0.formation_id,
+        d1_0.mobile,
+        d1_0.nom,
+        d1_0.password,
+        d1_0.photo,
+        d1_0.prenom,
+        d1_0.statut 
+    from
+        doctorants d1_0
+Hibernate: 
+    select
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule 
+    from
+        formations f1_0 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        f1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.annee_universitaire_id,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule 
+    from
+        formations f1_0
+Hibernate: 
+    select
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle 
+    from
+        annees_universitaires au1_0 
+    where
+        au1_0.id=?
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        d1_0.id,
+        d1_0.date_creation,
+        d1_0.date_traitement,
+        d1_0.description,
+        d1_0.doctorant_id,
+        d1_0.objet,
+        d1_0.reponse,
+        d1_0.statut,
+        d1_0.traite_par_user_id,
+        d1_0.type 
+    from
+        demandes d1_0
+Hibernate: 
+    select
+        d1_0.id,
+        d1_0.cin,
+        d1_0.cne,
+        d1_0.code_apogee,
+        d1_0.date_creation,
+        d1_0.date_naissance,
+        d1_0.details,
+        d1_0.email,
+        e1_0.id,
+        e1_0.address,
+        e1_0.age,
+        e1_0.cin,
+        e1_0.email,
+        e1_0.enabled,
+        e1_0.nom_fr,
+        e1_0.password,
+        e1_0.phone,
+        e1_0.photo,
+        e1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name,
+        e1_0.account_deactivated,
+        e1_0.app_notification,
+        e1_0.security_enabled,
+        e1_0.sms_email_notification,
+        e1_0.sexe,
+        d1_0.filiere,
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule,
+        d1_0.mobile,
+        d1_0.nom,
+        d1_0.password,
+        d1_0.photo,
+        d1_0.prenom,
+        d1_0.statut 
+    from
+        doctorants d1_0 
+    left join
+        users e1_0 
+            on e1_0.id=d1_0.encadrant_user_id 
+    left join
+        user_roles r1_0 
+            on e1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    left join
+        formations f1_0 
+            on f1_0.id=d1_0.formation_id 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        d1_0.id=?
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        d1_0.id,
+        d1_0.cin,
+        d1_0.cne,
+        d1_0.code_apogee,
+        d1_0.date_creation,
+        d1_0.date_naissance,
+        d1_0.details,
+        d1_0.email,
+        d1_0.encadrant_user_id,
+        d1_0.filiere,
+        d1_0.formation_id,
+        d1_0.mobile,
+        d1_0.nom,
+        d1_0.password,
+        d1_0.photo,
+        d1_0.prenom,
+        d1_0.statut 
+    from
+        doctorants d1_0
+Hibernate: 
+    select
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule 
+    from
+        formations f1_0 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        f1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        d1_0.id,
+        d1_0.cin,
+        d1_0.cne,
+        d1_0.code_apogee,
+        d1_0.date_creation,
+        d1_0.date_naissance,
+        d1_0.details,
+        d1_0.email,
+        d1_0.encadrant_user_id,
+        d1_0.filiere,
+        d1_0.formation_id,
+        d1_0.mobile,
+        d1_0.nom,
+        d1_0.password,
+        d1_0.photo,
+        d1_0.prenom,
+        d1_0.statut 
+    from
+        doctorants d1_0
+Hibernate: 
+    select
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule 
+    from
+        formations f1_0 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        f1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        d1_0.id,
+        d1_0.cin,
+        d1_0.cne,
+        d1_0.code_apogee,
+        d1_0.date_creation,
+        d1_0.date_naissance,
+        d1_0.details,
+        d1_0.email,
+        d1_0.encadrant_user_id,
+        d1_0.filiere,
+        d1_0.formation_id,
+        d1_0.mobile,
+        d1_0.nom,
+        d1_0.password,
+        d1_0.photo,
+        d1_0.prenom,
+        d1_0.statut 
+    from
+        doctorants d1_0
+Hibernate: 
+    select
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule 
+    from
+        formations f1_0 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        f1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        count(*) 
+    from
+        formations f1_0
+Hibernate: 
+    select
+        count(f1_0.id) 
+    from
+        formations f1_0 
+    where
+        f1_0.date_creation>?
+Hibernate: 
+    select
+        count(*) 
+    from
+        doctorants d1_0
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        doctorants d1_0 
+    where
+        d1_0.date_creation>?
+Hibernate: 
+    select
+        count(*) 
+    from
+        rendez_vous rv1_0
+Hibernate: 
+    select
+        rv1_0.id,
+        rv1_0.commentaire,
+        rv1_0.date_creation,
+        rv1_0.date_heure,
+        rv1_0.doctorant_id,
+        rv1_0.formateur_user_id,
+        rv1_0.lieu,
+        rv1_0.objet,
+        rv1_0.statut 
+    from
+        rendez_vous rv1_0 
+    where
+        rv1_0.date_creation>?
+Hibernate: 
+    select
+        d1_0.id,
+        d1_0.cin,
+        d1_0.cne,
+        d1_0.code_apogee,
+        d1_0.date_creation,
+        d1_0.date_naissance,
+        d1_0.details,
+        d1_0.email,
+        e1_0.id,
+        e1_0.address,
+        e1_0.age,
+        e1_0.cin,
+        e1_0.email,
+        e1_0.enabled,
+        e1_0.nom_fr,
+        e1_0.password,
+        e1_0.phone,
+        e1_0.photo,
+        e1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name,
+        e1_0.account_deactivated,
+        e1_0.app_notification,
+        e1_0.security_enabled,
+        e1_0.sms_email_notification,
+        e1_0.sexe,
+        d1_0.filiere,
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule,
+        d1_0.mobile,
+        d1_0.nom,
+        d1_0.password,
+        d1_0.photo,
+        d1_0.prenom,
+        d1_0.statut 
+    from
+        doctorants d1_0 
+    left join
+        users e1_0 
+            on e1_0.id=d1_0.encadrant_user_id 
+    left join
+        user_roles r1_0 
+            on e1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    left join
+        formations f1_0 
+            on f1_0.id=d1_0.formation_id 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        d1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        count(*) 
+    from
+        demandes d1_0
+Hibernate: 
+    select
+        d1_0.id,
+        d1_0.date_creation,
+        d1_0.date_traitement,
+        d1_0.description,
+        d1_0.doctorant_id,
+        d1_0.objet,
+        d1_0.reponse,
+        d1_0.statut,
+        d1_0.traite_par_user_id,
+        d1_0.type 
+    from
+        demandes d1_0 
+    where
+        d1_0.date_creation>?
+Hibernate: 
+    select
+        d1_0.id,
+        d1_0.date_creation,
+        d1_0.date_traitement,
+        d1_0.description,
+        d1_0.doctorant_id,
+        d1_0.objet,
+        d1_0.reponse,
+        d1_0.statut,
+        d1_0.traite_par_user_id,
+        d1_0.type 
+    from
+        demandes d1_0 
+    where
+        d1_0.date_creation>?
+Hibernate: 
+    select
+        r1_0.id,
+        r1_0.annee_universitaire_id,
+        r1_0.commentaire,
+        r1_0.date_creation,
+        r1_0.date_traitement,
+        r1_0.doctorant_id,
+        r1_0.statut,
+        r1_0.traite_par_user_id 
+    from
+        reinscriptions r1_0 
+    where
+        r1_0.date_creation>?
+Hibernate: 
+    select
+        d1_0.id,
+        d1_0.cin,
+        d1_0.cne,
+        d1_0.code_apogee,
+        d1_0.date_creation,
+        d1_0.date_naissance,
+        d1_0.details,
+        d1_0.email,
+        e1_0.id,
+        e1_0.address,
+        e1_0.age,
+        e1_0.cin,
+        e1_0.email,
+        e1_0.enabled,
+        e1_0.nom_fr,
+        e1_0.password,
+        e1_0.phone,
+        e1_0.photo,
+        e1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name,
+        e1_0.account_deactivated,
+        e1_0.app_notification,
+        e1_0.security_enabled,
+        e1_0.sms_email_notification,
+        e1_0.sexe,
+        d1_0.filiere,
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule,
+        d1_0.mobile,
+        d1_0.nom,
+        d1_0.password,
+        d1_0.photo,
+        d1_0.prenom,
+        d1_0.statut 
+    from
+        doctorants d1_0 
+    left join
+        users e1_0 
+            on e1_0.id=d1_0.encadrant_user_id 
+    left join
+        user_roles r1_0 
+            on e1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    left join
+        formations f1_0 
+            on f1_0.id=d1_0.formation_id 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        d1_0.id=?
+Hibernate: 
+    select
+        p1_0.id,
+        p1_0.code_scanned,
+        p1_0.date_participation,
+        p1_0.doctorant_id,
+        p1_0.module_id,
+        p1_0.recorded_by_user_id 
+    from
+        participations p1_0 
+    where
+        p1_0.date_participation>?
+Hibernate: 
+    select
+        mf1_0.id,
+        mf1_0.formation_id,
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule,
+        mf1_0.nom 
+    from
+        modules_formation mf1_0 
+    join
+        formations f1_0 
+            on f1_0.id=mf1_0.formation_id 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        mf1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        rv1_0.id,
+        rv1_0.commentaire,
+        rv1_0.date_creation,
+        rv1_0.date_heure,
+        rv1_0.doctorant_id,
+        rv1_0.formateur_user_id,
+        rv1_0.lieu,
+        rv1_0.objet,
+        rv1_0.statut 
+    from
+        rendez_vous rv1_0 
+    where
+        rv1_0.date_creation>?
+Hibernate: 
+    select
+        pr1_0.id,
+        pr1_0.date_creation,
+        pr1_0.date_publication,
+        pr1_0.description,
+        pr1_0.doctorant_id,
+        pr1_0.lien,
+        pr1_0.reference,
+        pr1_0.titre,
+        pr1_0.type 
+    from
+        publications_recherche pr1_0 
+    where
+        pr1_0.date_creation>?
+Hibernate: 
+    select
+        d1_0.id,
+        d1_0.date_creation,
+        d1_0.date_traitement,
+        d1_0.description,
+        d1_0.doctorant_id,
+        d1_0.objet,
+        d1_0.reponse,
+        d1_0.statut,
+        d1_0.traite_par_user_id,
+        d1_0.type 
+    from
+        demandes d1_0 
+    order by
+        d1_0.date_creation desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        rv1_0.id,
+        rv1_0.commentaire,
+        rv1_0.date_creation,
+        rv1_0.date_heure,
+        rv1_0.doctorant_id,
+        rv1_0.formateur_user_id,
+        rv1_0.lieu,
+        rv1_0.objet,
+        rv1_0.statut 
+    from
+        rendez_vous rv1_0 
+    order by
+        rv1_0.date_creation desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        pr1_0.id,
+        pr1_0.date_creation,
+        pr1_0.date_publication,
+        pr1_0.description,
+        pr1_0.doctorant_id,
+        pr1_0.lien,
+        pr1_0.reference,
+        pr1_0.titre,
+        pr1_0.type 
+    from
+        publications_recherche pr1_0 
+    order by
+        pr1_0.date_creation desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        n1_0.id,
+        n1_0.date_creation,
+        n1_0.doctorant_id,
+        n1_0.lu,
+        n1_0.message,
+        n1_0.titre 
+    from
+        notifications n1_0 
+    order by
+        n1_0.date_creation desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        n1_0.id,
+        n1_0.date_creation,
+        n1_0.doctorant_id,
+        n1_0.lu,
+        n1_0.message,
+        n1_0.titre 
+    from
+        notifications n1_0
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        d1_0.id,
+        d1_0.cin,
+        d1_0.cne,
+        d1_0.code_apogee,
+        d1_0.date_creation,
+        d1_0.date_naissance,
+        d1_0.details,
+        d1_0.email,
+        d1_0.encadrant_user_id,
+        d1_0.filiere,
+        d1_0.formation_id,
+        d1_0.mobile,
+        d1_0.nom,
+        d1_0.password,
+        d1_0.photo,
+        d1_0.prenom,
+        d1_0.statut 
+    from
+        doctorants d1_0
+Hibernate: 
+    select
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule 
+    from
+        formations f1_0 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        f1_0.id=?
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        d1_0.id,
+        d1_0.cin,
+        d1_0.cne,
+        d1_0.code_apogee,
+        d1_0.date_creation,
+        d1_0.date_naissance,
+        d1_0.details,
+        d1_0.email,
+        e1_0.id,
+        e1_0.address,
+        e1_0.age,
+        e1_0.cin,
+        e1_0.email,
+        e1_0.enabled,
+        e1_0.nom_fr,
+        e1_0.password,
+        e1_0.phone,
+        e1_0.photo,
+        e1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name,
+        e1_0.account_deactivated,
+        e1_0.app_notification,
+        e1_0.security_enabled,
+        e1_0.sms_email_notification,
+        e1_0.sexe,
+        d1_0.filiere,
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule,
+        d1_0.mobile,
+        d1_0.nom,
+        d1_0.password,
+        d1_0.photo,
+        d1_0.prenom,
+        d1_0.statut 
+    from
+        doctorants d1_0 
+    left join
+        users e1_0 
+            on e1_0.id=d1_0.encadrant_user_id 
+    left join
+        user_roles r1_0 
+            on e1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    left join
+        formations f1_0 
+            on f1_0.id=d1_0.formation_id 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        d1_0.id=?
+Hibernate: 
+    insert 
+    into
+        notifications
+        (date_creation, doctorant_id, lu, message, titre, id) 
+    values
+        (?, ?, ?, ?, ?, default)
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        n1_0.id,
+        n1_0.date_creation,
+        n1_0.doctorant_id,
+        n1_0.lu,
+        n1_0.message,
+        n1_0.titre 
+    from
+        notifications n1_0
+Hibernate: 
+    select
+        d1_0.id,
+        d1_0.cin,
+        d1_0.cne,
+        d1_0.code_apogee,
+        d1_0.date_creation,
+        d1_0.date_naissance,
+        d1_0.details,
+        d1_0.email,
+        e1_0.id,
+        e1_0.address,
+        e1_0.age,
+        e1_0.cin,
+        e1_0.email,
+        e1_0.enabled,
+        e1_0.nom_fr,
+        e1_0.password,
+        e1_0.phone,
+        e1_0.photo,
+        e1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name,
+        e1_0.account_deactivated,
+        e1_0.app_notification,
+        e1_0.security_enabled,
+        e1_0.sms_email_notification,
+        e1_0.sexe,
+        d1_0.filiere,
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule,
+        d1_0.mobile,
+        d1_0.nom,
+        d1_0.password,
+        d1_0.photo,
+        d1_0.prenom,
+        d1_0.statut 
+    from
+        doctorants d1_0 
+    left join
+        users e1_0 
+            on e1_0.id=d1_0.encadrant_user_id 
+    left join
+        user_roles r1_0 
+            on e1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    left join
+        formations f1_0 
+            on f1_0.id=d1_0.formation_id 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        d1_0.id=?
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        count(*) 
+    from
+        notifications n1_0 
+    where
+        n1_0.id=?
+Hibernate: 
+    select
+        n1_0.id,
+        n1_0.date_creation,
+        d1_0.id,
+        d1_0.cin,
+        d1_0.cne,
+        d1_0.code_apogee,
+        d1_0.date_creation,
+        d1_0.date_naissance,
+        d1_0.details,
+        d1_0.email,
+        e1_0.id,
+        e1_0.address,
+        e1_0.age,
+        e1_0.cin,
+        e1_0.email,
+        e1_0.enabled,
+        e1_0.nom_fr,
+        e1_0.password,
+        e1_0.phone,
+        e1_0.photo,
+        e1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name,
+        e1_0.account_deactivated,
+        e1_0.app_notification,
+        e1_0.security_enabled,
+        e1_0.sms_email_notification,
+        e1_0.sexe,
+        d1_0.filiere,
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule,
+        d1_0.mobile,
+        d1_0.nom,
+        d1_0.password,
+        d1_0.photo,
+        d1_0.prenom,
+        d1_0.statut,
+        n1_0.lu,
+        n1_0.message,
+        n1_0.titre 
+    from
+        notifications n1_0 
+    left join
+        doctorants d1_0 
+            on d1_0.id=n1_0.doctorant_id 
+    left join
+        users e1_0 
+            on e1_0.id=d1_0.encadrant_user_id 
+    left join
+        user_roles r1_0 
+            on e1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    left join
+        formations f1_0 
+            on f1_0.id=d1_0.formation_id 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        n1_0.id=?
+Hibernate: 
+    delete 
+    from
+        notifications 
+    where
+        id=?
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        n1_0.id,
+        n1_0.date_creation,
+        n1_0.doctorant_id,
+        n1_0.lu,
+        n1_0.message,
+        n1_0.titre 
+    from
+        notifications n1_0
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        d1_0.id,
+        d1_0.cin,
+        d1_0.cne,
+        d1_0.code_apogee,
+        d1_0.date_creation,
+        d1_0.date_naissance,
+        d1_0.details,
+        d1_0.email,
+        d1_0.encadrant_user_id,
+        d1_0.filiere,
+        d1_0.formation_id,
+        d1_0.mobile,
+        d1_0.nom,
+        d1_0.password,
+        d1_0.photo,
+        d1_0.prenom,
+        d1_0.statut 
+    from
+        doctorants d1_0
+Hibernate: 
+    select
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule 
+    from
+        formations f1_0 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        f1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.annee_universitaire_id,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule 
+    from
+        formations f1_0
+Hibernate: 
+    select
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle 
+    from
+        annees_universitaires au1_0 
+    where
+        au1_0.id=?
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule 
+    from
+        formations f1_0 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        f1_0.id=?
+Hibernate: 
+    insert 
+    into
+        doctorants
+        (cin, cne, code_apogee, date_creation, date_naissance, details, email, encadrant_user_id, filiere, formation_id, mobile, nom, password, photo, prenom, statut, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        d1_0.id,
+        d1_0.cin,
+        d1_0.cne,
+        d1_0.code_apogee,
+        d1_0.date_creation,
+        d1_0.date_naissance,
+        d1_0.details,
+        d1_0.email,
+        d1_0.encadrant_user_id,
+        d1_0.filiere,
+        d1_0.formation_id,
+        d1_0.mobile,
+        d1_0.nom,
+        d1_0.password,
+        d1_0.photo,
+        d1_0.prenom,
+        d1_0.statut 
+    from
+        doctorants d1_0
+Hibernate: 
+    select
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule 
+    from
+        formations f1_0 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        f1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        d1_0.id,
+        d1_0.date_creation,
+        d1_0.date_traitement,
+        d1_0.description,
+        d1_0.doctorant_id,
+        d1_0.objet,
+        d1_0.reponse,
+        d1_0.statut,
+        d1_0.traite_par_user_id,
+        d1_0.type 
+    from
+        demandes d1_0
+Hibernate: 
+    select
+        d1_0.id,
+        d1_0.cin,
+        d1_0.cne,
+        d1_0.code_apogee,
+        d1_0.date_creation,
+        d1_0.date_naissance,
+        d1_0.details,
+        d1_0.email,
+        e1_0.id,
+        e1_0.address,
+        e1_0.age,
+        e1_0.cin,
+        e1_0.email,
+        e1_0.enabled,
+        e1_0.nom_fr,
+        e1_0.password,
+        e1_0.phone,
+        e1_0.photo,
+        e1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name,
+        e1_0.account_deactivated,
+        e1_0.app_notification,
+        e1_0.security_enabled,
+        e1_0.sms_email_notification,
+        e1_0.sexe,
+        d1_0.filiere,
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule,
+        d1_0.mobile,
+        d1_0.nom,
+        d1_0.password,
+        d1_0.photo,
+        d1_0.prenom,
+        d1_0.statut 
+    from
+        doctorants d1_0 
+    left join
+        users e1_0 
+            on e1_0.id=d1_0.encadrant_user_id 
+    left join
+        user_roles r1_0 
+            on e1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    left join
+        formations f1_0 
+            on f1_0.id=d1_0.formation_id 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        d1_0.id=?
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        d1_0.id,
+        d1_0.cin,
+        d1_0.cne,
+        d1_0.code_apogee,
+        d1_0.date_creation,
+        d1_0.date_naissance,
+        d1_0.details,
+        d1_0.email,
+        d1_0.encadrant_user_id,
+        d1_0.filiere,
+        d1_0.formation_id,
+        d1_0.mobile,
+        d1_0.nom,
+        d1_0.password,
+        d1_0.photo,
+        d1_0.prenom,
+        d1_0.statut 
+    from
+        doctorants d1_0
+Hibernate: 
+    select
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule 
+    from
+        formations f1_0 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        f1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        d1_0.id,
+        d1_0.cin,
+        d1_0.cne,
+        d1_0.code_apogee,
+        d1_0.date_creation,
+        d1_0.date_naissance,
+        d1_0.details,
+        d1_0.email,
+        e1_0.id,
+        e1_0.address,
+        e1_0.age,
+        e1_0.cin,
+        e1_0.email,
+        e1_0.enabled,
+        e1_0.nom_fr,
+        e1_0.password,
+        e1_0.phone,
+        e1_0.photo,
+        e1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name,
+        e1_0.account_deactivated,
+        e1_0.app_notification,
+        e1_0.security_enabled,
+        e1_0.sms_email_notification,
+        e1_0.sexe,
+        d1_0.filiere,
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule,
+        d1_0.mobile,
+        d1_0.nom,
+        d1_0.password,
+        d1_0.photo,
+        d1_0.prenom,
+        d1_0.statut 
+    from
+        doctorants d1_0 
+    left join
+        users e1_0 
+            on e1_0.id=d1_0.encadrant_user_id 
+    left join
+        user_roles r1_0 
+            on e1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    left join
+        formations f1_0 
+            on f1_0.id=d1_0.formation_id 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        d1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        u1_0.id=?
+Hibernate: 
+    update
+        doctorants 
+    set
+        cin=?,
+        cne=?,
+        code_apogee=?,
+        date_creation=?,
+        date_naissance=?,
+        details=?,
+        email=?,
+        encadrant_user_id=?,
+        filiere=?,
+        formation_id=?,
+        mobile=?,
+        nom=?,
+        password=?,
+        photo=?,
+        prenom=?,
+        statut=? 
+    where
+        id=?
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        d1_0.id,
+        d1_0.cin,
+        d1_0.cne,
+        d1_0.code_apogee,
+        d1_0.date_creation,
+        d1_0.date_naissance,
+        d1_0.details,
+        d1_0.email,
+        d1_0.encadrant_user_id,
+        d1_0.filiere,
+        d1_0.formation_id,
+        d1_0.mobile,
+        d1_0.nom,
+        d1_0.password,
+        d1_0.photo,
+        d1_0.prenom,
+        d1_0.statut 
+    from
+        doctorants d1_0
+Hibernate: 
+    select
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule 
+    from
+        formations f1_0 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        f1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        d1_0.id,
+        d1_0.cin,
+        d1_0.cne,
+        d1_0.code_apogee,
+        d1_0.date_creation,
+        d1_0.date_naissance,
+        d1_0.details,
+        d1_0.email,
+        e1_0.id,
+        e1_0.address,
+        e1_0.age,
+        e1_0.cin,
+        e1_0.email,
+        e1_0.enabled,
+        e1_0.nom_fr,
+        e1_0.password,
+        e1_0.phone,
+        e1_0.photo,
+        e1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name,
+        e1_0.account_deactivated,
+        e1_0.app_notification,
+        e1_0.security_enabled,
+        e1_0.sms_email_notification,
+        e1_0.sexe,
+        d1_0.filiere,
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule,
+        d1_0.mobile,
+        d1_0.nom,
+        d1_0.password,
+        d1_0.photo,
+        d1_0.prenom,
+        d1_0.statut 
+    from
+        doctorants d1_0 
+    left join
+        users e1_0 
+            on e1_0.id=d1_0.encadrant_user_id 
+    left join
+        user_roles r1_0 
+            on e1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    left join
+        formations f1_0 
+            on f1_0.id=d1_0.formation_id 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        d1_0.id=?
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.annee_universitaire_id,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule 
+    from
+        formations f1_0
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        d1_0.id,
+        d1_0.cin,
+        d1_0.cne,
+        d1_0.code_apogee,
+        d1_0.date_creation,
+        d1_0.date_naissance,
+        d1_0.details,
+        d1_0.email,
+        d1_0.encadrant_user_id,
+        d1_0.filiere,
+        d1_0.formation_id,
+        d1_0.mobile,
+        d1_0.nom,
+        d1_0.password,
+        d1_0.photo,
+        d1_0.prenom,
+        d1_0.statut 
+    from
+        doctorants d1_0
+Hibernate: 
+    select
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule 
+    from
+        formations f1_0 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        f1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        d1_0.id,
+        d1_0.cin,
+        d1_0.cne,
+        d1_0.code_apogee,
+        d1_0.date_creation,
+        d1_0.date_naissance,
+        d1_0.details,
+        d1_0.email,
+        e1_0.id,
+        e1_0.address,
+        e1_0.age,
+        e1_0.cin,
+        e1_0.email,
+        e1_0.enabled,
+        e1_0.nom_fr,
+        e1_0.password,
+        e1_0.phone,
+        e1_0.photo,
+        e1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name,
+        e1_0.account_deactivated,
+        e1_0.app_notification,
+        e1_0.security_enabled,
+        e1_0.sms_email_notification,
+        e1_0.sexe,
+        d1_0.filiere,
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule,
+        d1_0.mobile,
+        d1_0.nom,
+        d1_0.password,
+        d1_0.photo,
+        d1_0.prenom,
+        d1_0.statut 
+    from
+        doctorants d1_0 
+    left join
+        users e1_0 
+            on e1_0.id=d1_0.encadrant_user_id 
+    left join
+        user_roles r1_0 
+            on e1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    left join
+        formations f1_0 
+            on f1_0.id=d1_0.formation_id 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        d1_0.id=?
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        d1_0.id,
+        d1_0.cin,
+        d1_0.cne,
+        d1_0.code_apogee,
+        d1_0.date_creation,
+        d1_0.date_naissance,
+        d1_0.details,
+        d1_0.email,
+        d1_0.encadrant_user_id,
+        d1_0.filiere,
+        d1_0.formation_id,
+        d1_0.mobile,
+        d1_0.nom,
+        d1_0.password,
+        d1_0.photo,
+        d1_0.prenom,
+        d1_0.statut 
+    from
+        doctorants d1_0
+Hibernate: 
+    select
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule 
+    from
+        formations f1_0 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        f1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        d1_0.id,
+        d1_0.cin,
+        d1_0.cne,
+        d1_0.code_apogee,
+        d1_0.date_creation,
+        d1_0.date_naissance,
+        d1_0.details,
+        d1_0.email,
+        e1_0.id,
+        e1_0.address,
+        e1_0.age,
+        e1_0.cin,
+        e1_0.email,
+        e1_0.enabled,
+        e1_0.nom_fr,
+        e1_0.password,
+        e1_0.phone,
+        e1_0.photo,
+        e1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name,
+        e1_0.account_deactivated,
+        e1_0.app_notification,
+        e1_0.security_enabled,
+        e1_0.sms_email_notification,
+        e1_0.sexe,
+        d1_0.filiere,
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule,
+        d1_0.mobile,
+        d1_0.nom,
+        d1_0.password,
+        d1_0.photo,
+        d1_0.prenom,
+        d1_0.statut 
+    from
+        doctorants d1_0 
+    left join
+        users e1_0 
+            on e1_0.id=d1_0.encadrant_user_id 
+    left join
+        user_roles r1_0 
+            on e1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    left join
+        formations f1_0 
+            on f1_0.id=d1_0.formation_id 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        d1_0.id=?
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        d1_0.id,
+        d1_0.cin,
+        d1_0.cne,
+        d1_0.code_apogee,
+        d1_0.date_creation,
+        d1_0.date_naissance,
+        d1_0.details,
+        d1_0.email,
+        d1_0.encadrant_user_id,
+        d1_0.filiere,
+        d1_0.formation_id,
+        d1_0.mobile,
+        d1_0.nom,
+        d1_0.password,
+        d1_0.photo,
+        d1_0.prenom,
+        d1_0.statut 
+    from
+        doctorants d1_0
+Hibernate: 
+    select
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule 
+    from
+        formations f1_0 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        f1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        n1_0.id,
+        n1_0.date_creation,
+        n1_0.doctorant_id,
+        n1_0.lu,
+        n1_0.message,
+        n1_0.titre 
+    from
+        notifications n1_0
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        rv1_0.id,
+        rv1_0.commentaire,
+        rv1_0.date_creation,
+        rv1_0.date_heure,
+        rv1_0.doctorant_id,
+        rv1_0.formateur_user_id,
+        rv1_0.lieu,
+        rv1_0.objet,
+        rv1_0.statut 
+    from
+        rendez_vous rv1_0
+Hibernate: 
+    select
+        d1_0.id,
+        d1_0.cin,
+        d1_0.cne,
+        d1_0.code_apogee,
+        d1_0.date_creation,
+        d1_0.date_naissance,
+        d1_0.details,
+        d1_0.email,
+        e1_0.id,
+        e1_0.address,
+        e1_0.age,
+        e1_0.cin,
+        e1_0.email,
+        e1_0.enabled,
+        e1_0.nom_fr,
+        e1_0.password,
+        e1_0.phone,
+        e1_0.photo,
+        e1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name,
+        e1_0.account_deactivated,
+        e1_0.app_notification,
+        e1_0.security_enabled,
+        e1_0.sms_email_notification,
+        e1_0.sexe,
+        d1_0.filiere,
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule,
+        d1_0.mobile,
+        d1_0.nom,
+        d1_0.password,
+        d1_0.photo,
+        d1_0.prenom,
+        d1_0.statut 
+    from
+        doctorants d1_0 
+    left join
+        users e1_0 
+            on e1_0.id=d1_0.encadrant_user_id 
+    left join
+        user_roles r1_0 
+            on e1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    left join
+        formations f1_0 
+            on f1_0.id=d1_0.formation_id 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        d1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        fi1_0.id,
+        fi1_0.capacite_max,
+        fi1_0.date_debut,
+        fi1_0.date_fin,
+        fi1_0.description,
+        fi1_0.formateur_user_id,
+        fi1_0.intitule,
+        fi1_0.lieu 
+    from
+        formations_internes fi1_0
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        p1_0.formation_interne_id,
+        p1_1.id,
+        p1_1.cin,
+        p1_1.cne,
+        p1_1.code_apogee,
+        p1_1.date_creation,
+        p1_1.date_naissance,
+        p1_1.details,
+        p1_1.email,
+        e1_0.id,
+        e1_0.address,
+        e1_0.age,
+        e1_0.cin,
+        e1_0.email,
+        e1_0.enabled,
+        e1_0.nom_fr,
+        e1_0.password,
+        e1_0.phone,
+        e1_0.photo,
+        e1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p2_0.role_id,
+        p2_1.id,
+        p2_1.name,
+        e1_0.account_deactivated,
+        e1_0.app_notification,
+        e1_0.security_enabled,
+        e1_0.sms_email_notification,
+        e1_0.sexe,
+        p1_1.filiere,
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule,
+        p1_1.mobile,
+        p1_1.nom,
+        p1_1.password,
+        p1_1.photo,
+        p1_1.prenom,
+        p1_1.statut 
+    from
+        formation_interne_participants p1_0 
+    join
+        doctorants p1_1 
+            on p1_1.id=p1_0.doctorant_id 
+    left join
+        users e1_0 
+            on e1_0.id=p1_1.encadrant_user_id 
+    left join
+        user_roles r1_0 
+            on e1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p2_0 
+            on r1_1.id=p2_0.role_id 
+    left join
+        permissions p2_1 
+            on p2_1.id=p2_0.permission_id 
+    left join
+        formations f1_0 
+            on f1_0.id=p1_1.formation_id 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        p1_0.formation_interne_id=?
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        r1_0.id,
+        r1_0.annee_universitaire_id,
+        r1_0.commentaire,
+        r1_0.date_creation,
+        r1_0.date_traitement,
+        r1_0.doctorant_id,
+        r1_0.statut,
+        r1_0.traite_par_user_id 
+    from
+        reinscriptions r1_0
+Hibernate: 
+    select
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle 
+    from
+        annees_universitaires au1_0 
+    where
+        au1_0.id=?
+Hibernate: 
+    select
+        d1_0.id,
+        d1_0.cin,
+        d1_0.cne,
+        d1_0.code_apogee,
+        d1_0.date_creation,
+        d1_0.date_naissance,
+        d1_0.details,
+        d1_0.email,
+        e1_0.id,
+        e1_0.address,
+        e1_0.age,
+        e1_0.cin,
+        e1_0.email,
+        e1_0.enabled,
+        e1_0.nom_fr,
+        e1_0.password,
+        e1_0.phone,
+        e1_0.photo,
+        e1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name,
+        e1_0.account_deactivated,
+        e1_0.app_notification,
+        e1_0.security_enabled,
+        e1_0.sms_email_notification,
+        e1_0.sexe,
+        d1_0.filiere,
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule,
+        d1_0.mobile,
+        d1_0.nom,
+        d1_0.password,
+        d1_0.photo,
+        d1_0.prenom,
+        d1_0.statut 
+    from
+        doctorants d1_0 
+    left join
+        users e1_0 
+            on e1_0.id=d1_0.encadrant_user_id 
+    left join
+        user_roles r1_0 
+            on e1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    left join
+        formations f1_0 
+            on f1_0.id=d1_0.formation_id 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        d1_0.id=?
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        pr1_0.id,
+        pr1_0.date_creation,
+        pr1_0.date_publication,
+        pr1_0.description,
+        pr1_0.doctorant_id,
+        pr1_0.lien,
+        pr1_0.reference,
+        pr1_0.titre,
+        pr1_0.type 
+    from
+        publications_recherche pr1_0
+Hibernate: 
+    select
+        d1_0.id,
+        d1_0.cin,
+        d1_0.cne,
+        d1_0.code_apogee,
+        d1_0.date_creation,
+        d1_0.date_naissance,
+        d1_0.details,
+        d1_0.email,
+        e1_0.id,
+        e1_0.address,
+        e1_0.age,
+        e1_0.cin,
+        e1_0.email,
+        e1_0.enabled,
+        e1_0.nom_fr,
+        e1_0.password,
+        e1_0.phone,
+        e1_0.photo,
+        e1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name,
+        e1_0.account_deactivated,
+        e1_0.app_notification,
+        e1_0.security_enabled,
+        e1_0.sms_email_notification,
+        e1_0.sexe,
+        d1_0.filiere,
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule,
+        d1_0.mobile,
+        d1_0.nom,
+        d1_0.password,
+        d1_0.photo,
+        d1_0.prenom,
+        d1_0.statut 
+    from
+        doctorants d1_0 
+    left join
+        users e1_0 
+            on e1_0.id=d1_0.encadrant_user_id 
+    left join
+        user_roles r1_0 
+            on e1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    left join
+        formations f1_0 
+            on f1_0.id=d1_0.formation_id 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        d1_0.id=?
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        fi1_0.id,
+        fi1_0.capacite_max,
+        fi1_0.date_debut,
+        fi1_0.date_fin,
+        fi1_0.description,
+        fi1_0.formateur_user_id,
+        fi1_0.intitule,
+        fi1_0.lieu 
+    from
+        formations_internes fi1_0
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        p1_0.formation_interne_id,
+        p1_1.id,
+        p1_1.cin,
+        p1_1.cne,
+        p1_1.code_apogee,
+        p1_1.date_creation,
+        p1_1.date_naissance,
+        p1_1.details,
+        p1_1.email,
+        e1_0.id,
+        e1_0.address,
+        e1_0.age,
+        e1_0.cin,
+        e1_0.email,
+        e1_0.enabled,
+        e1_0.nom_fr,
+        e1_0.password,
+        e1_0.phone,
+        e1_0.photo,
+        e1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p2_0.role_id,
+        p2_1.id,
+        p2_1.name,
+        e1_0.account_deactivated,
+        e1_0.app_notification,
+        e1_0.security_enabled,
+        e1_0.sms_email_notification,
+        e1_0.sexe,
+        p1_1.filiere,
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule,
+        p1_1.mobile,
+        p1_1.nom,
+        p1_1.password,
+        p1_1.photo,
+        p1_1.prenom,
+        p1_1.statut 
+    from
+        formation_interne_participants p1_0 
+    join
+        doctorants p1_1 
+            on p1_1.id=p1_0.doctorant_id 
+    left join
+        users e1_0 
+            on e1_0.id=p1_1.encadrant_user_id 
+    left join
+        user_roles r1_0 
+            on e1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p2_0 
+            on r1_1.id=p2_0.role_id 
+    left join
+        permissions p2_1 
+            on p2_1.id=p2_0.permission_id 
+    left join
+        formations f1_0 
+            on f1_0.id=p1_1.formation_id 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        p1_0.formation_interne_id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    where
+        u1_0.cin=?
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.annee_universitaire_id,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule 
+    from
+        formations f1_0
+Hibernate: 
+    select
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle 
+    from
+        annees_universitaires au1_0 
+    where
+        au1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    where
+        u1_0.cin=?
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.annee_universitaire_id,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule 
+    from
+        formations f1_0
+Hibernate: 
+    select
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle 
+    from
+        annees_universitaires au1_0 
+    where
+        au1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    where
+        u1_0.cin=?
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.annee_universitaire_id,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule 
+    from
+        formations f1_0
+Hibernate: 
+    select
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle 
+    from
+        annees_universitaires au1_0 
+    where
+        au1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    where
+        u1_0.cin=?
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle 
+    from
+        annees_universitaires au1_0 
+    where
+        au1_0.active
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    where
+        u1_0.cin=?
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.annee_universitaire_id,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule 
+    from
+        formations f1_0
+Hibernate: 
+    select
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle 
+    from
+        annees_universitaires au1_0 
+    where
+        au1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    where
+        u1_0.cin=?
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    where
+        u1_0.cin=?
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        u1_0.id=?
+Hibernate: 
+    update
+        users 
+    set
+        address=?,
+        age=?,
+        cin=?,
+        email=?,
+        enabled=?,
+        nom_fr=?,
+        password=?,
+        phone=?,
+        photo=?,
+        prenom_fr=?,
+        account_deactivated=?,
+        app_notification=?,
+        security_enabled=?,
+        sms_email_notification=?,
+        sexe=? 
+    where
+        id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    where
+        u1_0.cin=?
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        u1_0.id=?
+Hibernate: 
+    update
+        users 
+    set
+        address=?,
+        age=?,
+        cin=?,
+        email=?,
+        enabled=?,
+        nom_fr=?,
+        password=?,
+        phone=?,
+        photo=?,
+        prenom_fr=?,
+        account_deactivated=?,
+        app_notification=?,
+        security_enabled=?,
+        sms_email_notification=?,
+        sexe=? 
+    where
+        id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    where
+        u1_0.cin=?
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle 
+    from
+        annees_universitaires au1_0 
+    where
+        au1_0.active
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    where
+        u1_0.cin=?
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle 
+    from
+        annees_universitaires au1_0 
+    where
+        au1_0.active
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    where
+        u1_0.cin=?
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle 
+    from
+        annees_universitaires au1_0 
+    where
+        au1_0.active
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    where
+        u1_0.cin=?
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        u1_0.id=?
+Hibernate: 
+    update
+        users 
+    set
+        address=?,
+        age=?,
+        cin=?,
+        email=?,
+        enabled=?,
+        nom_fr=?,
+        password=?,
+        phone=?,
+        photo=?,
+        prenom_fr=?,
+        account_deactivated=?,
+        app_notification=?,
+        security_enabled=?,
+        sms_email_notification=?,
+        sexe=? 
+    where
+        id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    where
+        u1_0.cin=?
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.annee_universitaire_id,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule 
+    from
+        formations f1_0
+Hibernate: 
+    select
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle 
+    from
+        annees_universitaires au1_0 
+    where
+        au1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    where
+        u1_0.cin=?
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    where
+        u1_0.cin=?
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.annee_universitaire_id,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule 
+    from
+        formations f1_0
+Hibernate: 
+    select
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle 
+    from
+        annees_universitaires au1_0 
+    where
+        au1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    where
+        u1_0.cin=?
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.annee_universitaire_id,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule 
+    from
+        formations f1_0
+Hibernate: 
+    select
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle 
+    from
+        annees_universitaires au1_0 
+    where
+        au1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    where
+        u1_0.cin=?
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule 
+    from
+        formations f1_0 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        f1_0.id=?
+Hibernate: 
+    select
+        mf1_0.id,
+        mf1_0.formation_id,
+        mf1_0.nom 
+    from
+        modules_formation mf1_0 
+    where
+        mf1_0.formation_id=?
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        r1_0.id,
+        r1_0.annee_universitaire_id,
+        r1_0.commentaire,
+        r1_0.date_creation,
+        r1_0.date_traitement,
+        r1_0.doctorant_id,
+        r1_0.statut,
+        r1_0.traite_par_user_id 
+    from
+        reinscriptions r1_0
+Hibernate: 
+    select
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle 
+    from
+        annees_universitaires au1_0 
+    where
+        au1_0.id=?
+Hibernate: 
+    select
+        d1_0.id,
+        d1_0.cin,
+        d1_0.cne,
+        d1_0.code_apogee,
+        d1_0.date_creation,
+        d1_0.date_naissance,
+        d1_0.details,
+        d1_0.email,
+        e1_0.id,
+        e1_0.address,
+        e1_0.age,
+        e1_0.cin,
+        e1_0.email,
+        e1_0.enabled,
+        e1_0.nom_fr,
+        e1_0.password,
+        e1_0.phone,
+        e1_0.photo,
+        e1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name,
+        e1_0.account_deactivated,
+        e1_0.app_notification,
+        e1_0.security_enabled,
+        e1_0.sms_email_notification,
+        e1_0.sexe,
+        d1_0.filiere,
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule,
+        d1_0.mobile,
+        d1_0.nom,
+        d1_0.password,
+        d1_0.photo,
+        d1_0.prenom,
+        d1_0.statut 
+    from
+        doctorants d1_0 
+    left join
+        users e1_0 
+            on e1_0.id=d1_0.encadrant_user_id 
+    left join
+        user_roles r1_0 
+            on e1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    left join
+        formations f1_0 
+            on f1_0.id=d1_0.formation_id 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        d1_0.id=?
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        fi1_0.id,
+        fi1_0.capacite_max,
+        fi1_0.date_debut,
+        fi1_0.date_fin,
+        fi1_0.description,
+        fi1_0.formateur_user_id,
+        fi1_0.intitule,
+        fi1_0.lieu 
+    from
+        formations_internes fi1_0
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        p1_0.formation_interne_id,
+        p1_1.id,
+        p1_1.cin,
+        p1_1.cne,
+        p1_1.code_apogee,
+        p1_1.date_creation,
+        p1_1.date_naissance,
+        p1_1.details,
+        p1_1.email,
+        e1_0.id,
+        e1_0.address,
+        e1_0.age,
+        e1_0.cin,
+        e1_0.email,
+        e1_0.enabled,
+        e1_0.nom_fr,
+        e1_0.password,
+        e1_0.phone,
+        e1_0.photo,
+        e1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p2_0.role_id,
+        p2_1.id,
+        p2_1.name,
+        e1_0.account_deactivated,
+        e1_0.app_notification,
+        e1_0.security_enabled,
+        e1_0.sms_email_notification,
+        e1_0.sexe,
+        p1_1.filiere,
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule,
+        p1_1.mobile,
+        p1_1.nom,
+        p1_1.password,
+        p1_1.photo,
+        p1_1.prenom,
+        p1_1.statut 
+    from
+        formation_interne_participants p1_0 
+    join
+        doctorants p1_1 
+            on p1_1.id=p1_0.doctorant_id 
+    left join
+        users e1_0 
+            on e1_0.id=p1_1.encadrant_user_id 
+    left join
+        user_roles r1_0 
+            on e1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p2_0 
+            on r1_1.id=p2_0.role_id 
+    left join
+        permissions p2_1 
+            on p2_1.id=p2_0.permission_id 
+    left join
+        formations f1_0 
+            on f1_0.id=p1_1.formation_id 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        p1_0.formation_interne_id=?
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.annee_universitaire_id,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule 
+    from
+        formations f1_0
+Hibernate: 
+    select
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle 
+    from
+        annees_universitaires au1_0 
+    where
+        au1_0.id=?
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.annee_universitaire_id,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule 
+    from
+        formations f1_0
+Hibernate: 
+    select
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle 
+    from
+        annees_universitaires au1_0 
+    where
+        au1_0.id=?
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule 
+    from
+        formations f1_0 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        f1_0.id=?
+Hibernate: 
+    select
+        mf1_0.id,
+        mf1_0.formation_id,
+        mf1_0.nom 
+    from
+        modules_formation mf1_0 
+    where
+        mf1_0.formation_id=?
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.annee_universitaire_id,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule 
+    from
+        formations f1_0
+Hibernate: 
+    select
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle 
+    from
+        annees_universitaires au1_0 
+    where
+        au1_0.id=?
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle 
+    from
+        annees_universitaires au1_0 
+    where
+        au1_0.active
+Hibernate: 
+    insert 
+    into
+        formations
+        (annee_universitaire_id, date_creation, date_debut, date_fin, description, intitule, id) 
+    values
+        (?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.annee_universitaire_id,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule 
+    from
+        formations f1_0
+Hibernate: 
+    select
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle 
+    from
+        annees_universitaires au1_0 
+    where
+        au1_0.id=?
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule 
+    from
+        formations f1_0 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        f1_0.id=?
+Hibernate: 
+    select
+        mf1_0.id,
+        mf1_0.formation_id,
+        mf1_0.nom 
+    from
+        modules_formation mf1_0 
+    where
+        mf1_0.formation_id=?
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule 
+    from
+        formations f1_0 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        f1_0.id=?
+Hibernate: 
+    insert 
+    into
+        modules_formation
+        (formation_id, nom, id) 
+    values
+        (?, ?, default)
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule 
+    from
+        formations f1_0 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        f1_0.id=?
+Hibernate: 
+    select
+        mf1_0.id,
+        mf1_0.formation_id,
+        mf1_0.nom 
+    from
+        modules_formation mf1_0 
+    where
+        mf1_0.formation_id=?
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule 
+    from
+        formations f1_0 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        f1_0.id=?
+Hibernate: 
+    insert 
+    into
+        modules_formation
+        (formation_id, nom, id) 
+    values
+        (?, ?, default)
+Hibernate: 
+    select
+        count(d1_0.id) 
+    from
+        demandes d1_0 
+    where
+        d1_0.statut=?
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        not(n1_0.lu)
+Hibernate: 
+    select
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule 
+    from
+        formations f1_0 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        f1_0.id=?
+Hibernate: 
+    select
+        mf1_0.id,
+        mf1_0.formation_id,
+        mf1_0.nom 
+    from
+        modules_formation mf1_0 
+    where
+        mf1_0.formation_id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    where
+        u1_0.cin=?
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.annee_universitaire_id,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule 
+    from
+        formations f1_0
+Hibernate: 
+    select
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle 
+    from
+        annees_universitaires au1_0 
+    where
+        au1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    where
+        u1_0.cin=?
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule 
+    from
+        formations f1_0 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        f1_0.id=?
+Hibernate: 
+    select
+        mf1_0.id,
+        mf1_0.formation_id,
+        mf1_0.nom 
+    from
+        modules_formation mf1_0 
+    where
+        mf1_0.formation_id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    where
+        u1_0.cin=?
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.annee_universitaire_id,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule 
+    from
+        formations f1_0
+Hibernate: 
+    select
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle 
+    from
+        annees_universitaires au1_0 
+    where
+        au1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    where
+        u1_0.cin=?
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.annee_universitaire_id,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule 
+    from
+        formations f1_0
+Hibernate: 
+    select
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle 
+    from
+        annees_universitaires au1_0 
+    where
+        au1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    where
+        u1_0.cin=?
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule 
+    from
+        formations f1_0 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        f1_0.id=?
+Hibernate: 
+    select
+        mf1_0.id,
+        mf1_0.formation_id,
+        mf1_0.nom 
+    from
+        modules_formation mf1_0 
+    where
+        mf1_0.formation_id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    where
+        u1_0.cin=?
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        mf1_0.id,
+        mf1_0.formation_id,
+        mf1_0.nom 
+    from
+        modules_formation mf1_0 
+    where
+        mf1_0.id=? 
+        and mf1_0.formation_id=?
+Hibernate: 
+    select
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule 
+    from
+        formations f1_0 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        f1_0.id=?
+Hibernate: 
+    select
+        p1_0.id,
+        p1_0.code_scanned,
+        p1_0.date_participation,
+        p1_0.doctorant_id,
+        p1_0.module_id,
+        p1_0.recorded_by_user_id 
+    from
+        participations p1_0 
+    where
+        p1_0.module_id=?
+Hibernate: 
+    select
+        d1_0.id,
+        d1_0.cin,
+        d1_0.cne,
+        d1_0.code_apogee,
+        d1_0.date_creation,
+        d1_0.date_naissance,
+        d1_0.details,
+        d1_0.email,
+        e1_0.id,
+        e1_0.address,
+        e1_0.age,
+        e1_0.cin,
+        e1_0.email,
+        e1_0.enabled,
+        e1_0.nom_fr,
+        e1_0.password,
+        e1_0.phone,
+        e1_0.photo,
+        e1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name,
+        e1_0.account_deactivated,
+        e1_0.app_notification,
+        e1_0.security_enabled,
+        e1_0.sms_email_notification,
+        e1_0.sexe,
+        d1_0.filiere,
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule,
+        d1_0.mobile,
+        d1_0.nom,
+        d1_0.password,
+        d1_0.photo,
+        d1_0.prenom,
+        d1_0.statut 
+    from
+        doctorants d1_0 
+    left join
+        users e1_0 
+            on e1_0.id=d1_0.encadrant_user_id 
+    left join
+        user_roles r1_0 
+            on e1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    left join
+        formations f1_0 
+            on f1_0.id=d1_0.formation_id 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        d1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    left join
+        user_roles r1_0 
+            on u1_0.id=r1_0.user_id 
+    left join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    where
+        u1_0.cin=?
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule 
+    from
+        formations f1_0 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        f1_0.id=?
+Hibernate: 
+    select
+        mf1_0.id,
+        mf1_0.formation_id,
+        mf1_0.nom 
+    from
+        modules_formation mf1_0 
+    where
+        mf1_0.formation_id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    where
+        u1_0.cin=?
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        f1_0.id,
+        au1_0.id,
+        au1_0.active,
+        au1_0.date_debut,
+        au1_0.date_fin,
+        au1_0.libelle,
+        f1_0.date_creation,
+        f1_0.date_debut,
+        f1_0.date_fin,
+        f1_0.description,
+        f1_0.intitule 
+    from
+        formations f1_0 
+    left join
+        annees_universitaires au1_0 
+            on au1_0.id=f1_0.annee_universitaire_id 
+    where
+        f1_0.id=?
+Hibernate: 
+    select
+        mf1_0.id,
+        mf1_0.formation_id,
+        mf1_0.nom 
+    from
+        modules_formation mf1_0 
+    where
+        mf1_0.formation_id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    where
+        u1_0.cin=?
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.address,
+        u1_0.age,
+        u1_0.cin,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.nom_fr,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.photo,
+        u1_0.prenom_fr,
+        u1_0.account_deactivated,
+        u1_0.app_notification,
+        u1_0.security_enabled,
+        u1_0.sms_email_notification,
+        u1_0.sexe 
+    from
+        users u1_0 
+    where
+        u1_0.cin=?
+Hibernate: 
+    select
+        r1_0.user_id,
+        r1_1.id,
+        r1_1.name,
+        p1_0.role_id,
+        p1_1.id,
+        p1_1.name 
+    from
+        user_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    left join
+        role_permissions p1_0 
+            on r1_1.id=p1_0.role_id 
+    left join
+        permissions p1_1 
+            on p1_1.id=p1_0.permission_id 
+    where
+        r1_0.user_id=?

@@ -1,0 +1,91 @@
+<ion-header [translucent]="true" class="cd-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/hamza" text="" (click)="closemodal()"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      <ion-icon name="card-outline"></ion-icon>
+      Ma carte
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="carte-content">
+  <div class="ion-text-center ion-padding" *ngIf="loading">
+    <ion-spinner></ion-spinner>
+  </div>
+
+  <div class="carte-wrapper" *ngIf="!loading">
+    <p class="carte-hint"><ion-icon name="hand-left-outline"></ion-icon> Faites glisser ou touchez pour faire pivoter</p>
+
+    <div class="flip-stage" #flipStage
+         (pointerdown)="onPointerDown($event)" (pointermove)="onPointerMove($event)"
+         (pointerup)="onPointerUp()" (pointerleave)="onPointerUp()">
+      <div class="flip-card" [class.no-transition]="dragging" [style.transform]="'rotateY(' + rotation + 'deg)'">
+
+        <div class="flip-face flip-front">
+          <div class="card-top-bar">
+            <ion-icon name="school-outline"></ion-icon> Université Hassan Premier
+          </div>
+          <div class="card-body-front">
+            <div class="card-qr-box"><canvas #qrCanvas></canvas></div>
+            <div class="card-front-info">
+              <p class="fname">{{ profile.prenom }} {{ profile.nom }}</p>
+              <span class="frole">Doctorant</span>
+              <div class="frow"><ion-icon name="school-outline"></ion-icon> {{ profile.filiere || '—' }}</div>
+              <div class="frow"><ion-icon name="business-outline"></ion-icon> Université Hassan Premier</div>
+              <div class="frow"><ion-icon name="checkmark-circle-outline"></ion-icon> {{ profile.statut || 'Actif' }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flip-face flip-back">
+          <div class="card-back-top">
+            <div class="card-back-title">Carte d'étudiant</div>
+            <div class="card-back-photo">
+              <img *ngIf="profile.photo" [src]="profile.photo">
+              <span *ngIf="!profile.photo">{{ (profile.prenom || ' ')[0] }}{{ (profile.nom || ' ')[0] }}</span>
+            </div>
+          </div>
+          <div class="card-back-rows">
+            <div><b>Nom :</b> {{ profile.prenom }} {{ profile.nom }}</div>
+            <div><b>CIN :</b> {{ profile.cin || '—' }}</div>
+            <div><b>CNE :</b> {{ profile.cne || '—' }}</div>
+            <div><b>Nationalité :</b> {{ profile.nationalite || 'Marocaine' }}</div>
+          </div>
+          <div class="card-barcode"><svg #barcodeSvg></svg></div>
+          <div class="card-back-brand">UH1</div>
+        </div>
+
+      </div>
+    </div>
+
+    <ion-button class="flip-btn" fill="outline" (click)="flip()">
+      <ion-icon name="sync-outline" slot="start"></ion-icon>
+      Faire pivoter — 360°
+    </ion-button>
+
+    <div class="carte-perdue-card">
+      <div class="cp-icon"><ion-icon name="alert-circle-outline"></ion-icon></div>
+      <div class="cp-text">
+        <h4>Carte perdue ou endommagée ?</h4>
+        <p>Demandez une nouvelle carte, l'administration traitera votre demande.</p>
+      </div>
+    </div>
+
+    <div class="cp-status" *ngIf="derniereDemandeCarte as d">
+      <span class="cp-pill" [class.ok]="d.statut === 'APPROUVEE'" [class.ko]="d.statut === 'REJETEE'" [class.pending]="d.statut === 'EN_ATTENTE'">
+        <ion-icon [name]="d.statut === 'APPROUVEE' ? 'checkmark-circle' : (d.statut === 'REJETEE' ? 'close-circle' : 'time')"></ion-icon>
+        {{ d.statut === 'APPROUVEE' ? 'Demande approuvée' : (d.statut === 'REJETEE' ? 'Demande rejetée' : 'Demande en attente') }}
+      </span>
+      <p class="cp-reponse" *ngIf="d.reponse">{{ d.reponse }}</p>
+    </div>
+
+    <ion-button class="cp-btn" expand="block" fill="solid" color="warning"
+                [disabled]="envoiEnCours || derniereDemandeCarte?.statut === 'EN_ATTENTE'"
+                (click)="demanderNouvelleCarte()">
+      <ion-icon name="refresh-outline" slot="start"></ion-icon>
+      Demander une nouvelle carte
+    </ion-button>
+  </div>
+</ion-content>

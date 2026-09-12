@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="${doctorant.prenom} + ' ' + ${doctorant.nom} + ' — mpresence back-office'">Doctorant — mpresence back-office</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet"/>
+    <style>
+        .container-fluid { max-width: 1280px; }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 420px 1fr;
+            gap: 1.5rem;
+            align-items: start;
+        }
+        @media (max-width: 900px) {
+            .detail-grid { grid-template-columns: 1fr; }
+        }
+
+        /* ---- Carte 360 ---- */
+        .card-panel {
+            background: #fff;
+            border: 1px solid #eceef2;
+            border-radius: 16px;
+            padding: 1.25rem;
+        }
+        .card-panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        .card-panel-header .badge-360 {
+            background: #e8efff;
+            color: #4f7cff;
+            font-weight: 600;
+            font-size: .75rem;
+            padding: .3rem .7rem;
+            border-radius: 999px;
+        }
+        .card-panel-header .hint-text {
+            font-size: .72rem;
+            color: #b0b4bf;
+        }
+
+        .flip-stage {
+            perspective: 1400px;
+            height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+            cursor: grab;
+        }
+        .flip-stage:active { cursor: grabbing; }
+
+        .flip-card {
+            position: relative;
+            width: 320px;
+            height: 200px;
+            transform-style: preserve-3d;
+            transition: transform .5s cubic-bezier(.4,.2,.2,1);
+        }
+        .flip-face {
+            position: absolute;
+            inset: 0;
+            border-radius: 16px;
+            backface-visibility: hidden;
+            box-shadow: 0 12px 28px rgba(30, 50, 100, .18);
+            overflow: hidden;
+            color: #fff;
+        }
+        .flip-front {
+            background: linear-gradient(135deg, #17264d, #3f7fe0);
+            display: flex;
+            flex-direction: column;
+        }
+        .flip-back {
+            background: linear-gradient(135deg, #1c2b57, #2f6fd6);
+            transform: rotateY(180deg);
+            padding: .9rem 1rem;
+        }
+
+        .card-top-bar {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            padding: .7rem .9rem .5rem;
+            font-size: .8rem;
+            font-weight: 700;
+        }
+        .card-body-front {
+            flex: 1;
+            display: flex;
+            gap: .8rem;
+            padding: 0 1rem .9rem;
+        }
+        .card-qr-box {
+            width: 76px;
+            height: 76px;
+            background: #fff;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .card-qr-box img { width: 68px; height: 68px; }
+        .card-front-info { flex: 1; min-width: 0; }
+        .card-front-info .fname { font-weight: 700; font-size: .95rem; margin: 0; }
+        .card-front-info .frole {
+            display: inline-block;
+            background: rgba(255,255,255,.18);
+            font-size: .68rem;
+            padding: .1rem .5rem;
+            border-radius: 999px;
+            margin: .25rem 0 .4rem;
+        }
+        .card-front-info .fmeta { font-size: .68rem; opacity: .85; margin: 0 0 .2rem; }
+        .card-front-info .frow {
+            display: flex;
+            align-items: center;
+            gap: .4rem;
+            font-size: .72rem;
+            margin-top: .3rem;
+            opacity: .95;
+        }
+
+        .card-back-top { display: flex; align-items: center; justify-content: space-between; }
+        .card-back-title { font-weight: 700; font-size: .85rem; }
+        .card-back-photo {
+            width: 44px; height: 44px; border-radius: 50%;
+            background: rgba(255,255,255,.15);
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden; font-weight: 700; font-size: .8rem;
+        }
+        .card-back-photo img { width: 100%; height: 100%; object-fit: cover; }
+        .card-back-rows { margin-top: .5rem; font-size: .7rem; line-height: 1.55; }
+        .card-back-rows b { font-weight: 600; }
+        .card-barcode { margin-top: .5rem; background: #fff; border-radius: 6px; padding: .3rem; }
+        .card-back-brand { text-align: right; font-weight: 800; letter-spacing: .05em; font-size: .85rem; opacity: .9; margin-top: .3rem; }
+
+        .flip-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: .75rem;
+        }
+        .flip-controls button {
+            border: 1px solid #eceef2;
+            background: #fff;
+            border-radius: 999px;
+            width: 34px; height: 34px;
+            display: flex; align-items: center; justify-content: center;
+            color: #4f7cff;
+        }
+        .flip-controls .flip-btn {
+            width: auto; padding: 0 1rem; gap: .3rem; font-size: .8rem; font-weight: 600;
+        }
+
+        /* ---- Info panel ---- */
+        .info-panel {
+            background: #fff;
+            border: 1px solid #eceef2;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        .info-tabs {
+            display: flex;
+            border-bottom: 1px solid #f1f2f5;
+        }
+        .info-tabs button {
+            border: none;
+            background: none;
+            padding: .9rem 1.1rem;
+            font-size: .85rem;
+            color: #8a90a2;
+            font-weight: 600;
+            border-bottom: 2px solid transparent;
+        }
+        .info-tabs button.active {
+            color: #4f7cff;
+            border-bottom-color: #4f7cff;
+        }
+        .info-body { padding: 1.25rem 1.4rem; }
+
+        .info-header { display: flex; align-items: center; gap: .8rem; margin-bottom: 1.1rem; }
+        .info-header .avatar-circle-lg {
+            width: 52px; height: 52px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; color: #fff; font-size: 1.1rem; overflow: hidden; flex-shrink: 0;
+        }
+        .info-header .avatar-circle-lg img { width: 100%; height: 100%; object-fit: cover; }
+        .info-header h4 { margin: 0; font-weight: 700; }
+        .info-header .role-label { color: #8a90a2; font-size: .8rem; margin: 0; }
+        .status-pill {
+            margin-left: auto;
+            font-size: .72rem;
+            font-weight: 600;
+            padding: .25rem .6rem;
+            border-radius: 999px;
+        }
+        .status-pill.actif { background: #e6f7ee; color: #1fab6b; }
+        .status-pill.suspendu { background: #fdeef0; color: #d1373f; }
+        .status-pill.diplome { background: #e8efff; color: #4f7cff; }
+        .status-pill.abandonne { background: #f1f2f5; color: #8a90a2; }
+
+        .info-row {
+            display: flex;
+            align-items: center;
+            gap: .7rem;
+            padding: .55rem 0;
+            border-bottom: 1px solid #f6f7f9;
+            font-size: .85rem;
+        }
+        .info-row:last-child { border-bottom: none; }
+        .info-row i { color: #b0b4bf; width: 18px; text-align: center; }
+        .info-row .info-label { color: #8a90a2; min-width: 160px; }
+        .info-row .info-value { font-weight: 600; color: #2a2e37; }
+
+        .info-actions { display: flex; gap: .6rem; margin-top: 1.1rem; }
+
+        .hist-row { display: flex; align-items: center; gap: .6rem; padding: .6rem 0; border-bottom: 1px solid #f6f7f9; font-size: .85rem; }
+        .hist-row i { color: #1fab6b; }
+        .hist-row .hist-meta { color: #8a90a2; font-size: .75rem; }
+
+        .empty-state { text-align: center; color: #b0b4bf; padding: 2rem 0; font-size: .85rem; }
+    </style>
+</head>
+<body>
+<div th:replace="~{fragments/nav :: nav}"></div>
+
+<div class="container-fluid">
+    <div class="page-header">
+        <div class="page-title-row">
+            <div class="page-icon-badge"><i class="bi bi-people-fill"></i></div>
+            <div>
+                <h3>Doctorants</h3>
+                <p class="page-subtitle">Consultez et gérez les informations de vos doctorants</p>
+            </div>
+        </div>
+        <div class="d-flex gap-2">
+            <a th:href="@{/backoffice/doctorants}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left"></i> Retour à la liste</a>
+        </div>
+    </div>
+
+    <div class="detail-grid">
+        <div class="card-panel">
+            <div class="card-panel-header">
+                <span class="badge-360"><i class="bi bi-arrow-repeat"></i> Carte 360°</span>
+                <span class="hint-text">Faites glisser ou cliquez pour faire pivoter</span>
+            </div>
+
+            <div class="flip-stage" id="flipStage">
+                <div class="flip-card" id="flipCard">
+                    <div class="flip-face flip-front">
+                        <div class="card-top-bar">
+                            <i class="bi bi-mortarboard-fill"></i> Université Hassan Premier
+                        </div>
+                        <div class="card-body-front">
+                            <div class="card-qr-box"><div id="qrcode"></div></div>
+                            <div class="card-front-info">
+                                <p class="fname" th:text="${doctorant.prenom} + ' ' + ${doctorant.nom}"></p>
+                                <span class="frole">Doctorant</span>
+                                <p class="fmeta" th:text="'A.U. ' + (${doctorant.anneeUniversitaireLibelle} ?: '—')"></p>
+                                <div class="frow"><i class="bi bi-mortarboard"></i> <span th:text="${doctorant.filiere} ?: '—'"></span></div>
+                                <div class="frow"><i class="bi bi-bank"></i> <span>Université Hassan Premier</span></div>
+                                <div class="frow"><i class="bi bi-calendar3"></i>
+                                    <span th:text="${doctorant.dateCreation != null ? #temporals.format(doctorant.dateCreation, 'dd/MM/yyyy') : '—'}"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flip-face flip-back">
+                        <div class="card-back-top">
+                            <div class="card-back-title">Carte d'étudiant</div>
+                            <div class="card-back-photo">
+                                <img th:if="${doctorant.photo}" th:src="${doctorant.photo}" alt="">
+                                <span th:unless="${doctorant.photo}" th:text="${#strings.substring(doctorant.prenom,0,1)} + ${#strings.substring(doctorant.nom,0,1)}"></span>
+                            </div>
+                        </div>
+                        <div class="card-back-rows">
+                            <div><b>Nom :</b> <span th:text="${doctorant.prenom} + ' ' + ${doctorant.nom}"></span></div>
+                            <div><b>CIN :</b> <span th:text="${doctorant.cin} ?: '—'"></span></div>
+                            <div><b>Né(e) le :</b> <span th:text="${doctorant.dateNaissance != null ? #temporals.format(doctorant.dateNaissance, 'dd/MM/yyyy') : '—'}"></span></div>
+                            <div><b>Nationalité :</b> <span th:text="${doctorant.nationalite} ?: 'Marocaine'"></span></div>
+                        </div>
+                        <div class="card-barcode"><svg id="barcode"></svg></div>
+                        <div class="card-back-brand">UH1</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flip-controls">
+                <a th:if="${previousId != null}" th:href="@{/backoffice/doctorants/{id}(id=${previousId})}"><button type="button"><i class="bi bi-chevron-left"></i></button></a>
+                <button th:unless="${previousId != null}" type="button" disabled><i class="bi bi-chevron-left"></i></button>
+
+                <button type="button" class="flip-btn" id="flipBtn"><i class="bi bi-arrow-repeat"></i> 360°</button>
+
+                <a th:if="${nextId != null}" th:href="@{/backoffice/doctorants/{id}(id=${nextId})}"><button type="button"><i class="bi bi-chevron-right"></i></button></a>
+                <button th:unless="${nextId != null}" type="button" disabled><i class="bi bi-chevron-right"></i></button>
+            </div>
+        </div>
+
+        <div class="info-panel">
+            <div class="info-tabs">
+                <button type="button" class="active" data-tab="info"><i class="bi bi-info-circle"></i> Informations</button>
+                <button type="button" data-tab="hist"><i class="bi bi-clock-history"></i> Historique</button>
+                <button type="button" data-tab="doc"><i class="bi bi-file-earmark"></i> Documents</button>
+            </div>
+
+            <div class="info-body">
+                <div class="tab-pane" id="tab-info">
+                    <div class="info-header">
+                        <div class="avatar-circle-lg" style="background:#5b7cfa;">
+                            <img th:if="${doctorant.photo}" th:src="${doctorant.photo}" alt="">
+                            <span th:unless="${doctorant.photo}" th:text="${#strings.substring(doctorant.prenom,0,1)} + ${#strings.substring(doctorant.nom,0,1)}"></span>
+                        </div>
+                        <div>
+                            <h4 th:text="${doctorant.prenom} + ' ' + ${doctorant.nom}"></h4>
+                            <p class="role-label">Doctorant</p>
+                        </div>
+                        <span class="status-pill"
+                              th:classappend="${doctorant.statut} == 'ACTIF' ? 'actif' : (${doctorant.statut} == 'SUSPENDU' ? 'suspendu' : (${doctorant.statut} == 'DIPLOME' ? 'diplome' : 'abandonne'))"
+                              th:text="${doctorant.statut} == 'ACTIF' ? 'Actif' : (${doctorant.statut} == 'SUSPENDU' ? 'Suspendu' : (${doctorant.statut} == 'DIPLOME' ? 'Diplômé' : 'Abandonné'))"></span>
+                    </div>
+
+                    <div class="info-row"><i class="bi bi-bank"></i><span class="info-label">Université</span><span class="info-value">Université Hassan Premier</span></div>
+                    <div class="info-row"><i class="bi bi-mortarboard"></i><span class="info-label">Spécialité</span><span class="info-value" th:text="${doctorant.filiere} ?: '—'"></span></div>
+                    <div class="info-row"><i class="bi bi-calendar-range"></i><span class="info-label">Année universitaire</span><span class="info-value" th:text="${doctorant.anneeUniversitaireLibelle} ?: '—'"></span></div>
+                    <div class="info-row"><i class="bi bi-calendar-check"></i><span class="info-label">Date d'inscription</span>
+                        <span class="info-value" th:text="${doctorant.dateCreation != null ? #temporals.format(doctorant.dateCreation, 'dd/MM/yyyy') : '—'}"></span>
+                    </div>
+                    <div class="info-row"><i class="bi bi-flag"></i><span class="info-label">Nationalité</span><span class="info-value" th:text="${doctorant.nationalite} ?: 'Marocaine'"></span></div>
+                    <div class="info-row"><i class="bi bi-person-vcard"></i><span class="info-label">CIN</span><span class="info-value" th:text="${doctorant.cin} ?: '—'"></span></div>
+                    <div class="info-row"><i class="bi bi-telephone"></i><span class="info-label">Téléphone</span><span class="info-value" th:text="${doctorant.mobile} ?: '—'"></span></div>
+                    <div class="info-row"><i class="bi bi-envelope"></i><span class="info-label">Email</span><span class="info-value" th:text="${doctorant.email} ?: '—'"></span></div>
+                    <div class="info-row"><i class="bi bi-mortarboard-fill"></i><span class="info-label">Encadrant</span><span class="info-value" th:text="${doctorant.encadrantNomFr} ?: 'Non affecté'"></span></div>
+
+                    <div class="info-actions">
+                        <a th:href="@{/backoffice/rendezvous/new(doctorantId=${doctorant.id})}" class="btn btn-primary btn-sm"><i class="bi bi-calendar-plus"></i> Prendre un RDV</a>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" id="downloadCardBtn"><i class="bi bi-download"></i> Télécharger la carte</button>
+                    </div>
+                </div>
+
+                <div class="tab-pane d-none" id="tab-hist">
+                    <div th:if="${#lists.isEmpty(historique)}" class="empty-state">Aucune présence enregistrée pour le moment.</div>
+                    <div class="hist-row" th:each="h : ${historique}">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <div>
+                            <div th:text="${h.moduleNom} + ' — ' + ${h.formationIntitule}"></div>
+                            <div class="hist-meta" th:text="${#temporals.format(h.dateParticipation, 'dd/MM/yyyy HH:mm')}"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane d-none" id="tab-doc">
+                    <div class="empty-state">Aucun document pour le moment.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script th:inline="javascript">
+document.addEventListener('DOMContentLoaded', function () {
+    var codeApogee = /*[[${doctorant.codeApogee}]]*/ '';
+
+    new QRCode(document.getElementById('qrcode'), {
+        text: codeApogee,
+        width: 68,
+        height: 68,
+        correctLevel: QRCode.CorrectLevel.M
+    });
+
+    try {
+        JsBarcode('#barcode', codeApogee, { format: 'CODE128', width: 1.4, height: 30, displayValue: true, fontSize: 10, margin: 4 });
+    } catch (e) { /* code non compatible CODE128, on ignore */ }
+
+    // ---- Flip 360 (clic + glisser) ----
+    var card = document.getElementById('flipCard');
+    var stage = document.getElementById('flipStage');
+    var rotation = 0;
+    var dragging = false;
+    var startX = 0;
+    var startRotation = 0;
+
+    function applyRotation() {
+        card.style.transform = 'rotateY(' + rotation + 'deg)';
+    }
+
+    document.getElementById('flipBtn').addEventListener('click', function () {
+        rotation += 180;
+        applyRotation();
+    });
+
+    stage.addEventListener('pointerdown', function (e) {
+        dragging = true;
+        startX = e.clientX;
+        startRotation = rotation;
+        card.style.transition = 'none';
+        stage.setPointerCapture(e.pointerId);
+    });
+    stage.addEventListener('pointermove', function (e) {
+        if (!dragging) return;
+        var delta = e.clientX - startX;
+        rotation = startRotation + delta * 0.6;
+        applyRotation();
+    });
+    function endDrag() {
+        if (!dragging) return;
+        dragging = false;
+        card.style.transition = 'transform .5s cubic-bezier(.4,.2,.2,1)';
+        rotation = Math.round(rotation / 180) * 180;
+        applyRotation();
+    }
+    stage.addEventListener('pointerup', endDrag);
+    stage.addEventListener('pointerleave', endDrag);
+
+    // ---- Onglets ----
+    document.querySelectorAll('.info-tabs button').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            document.querySelectorAll('.info-tabs button').forEach(function (b) { b.classList.remove('active'); });
+            btn.classList.add('active');
+            document.querySelectorAll('.tab-pane').forEach(function (p) { p.classList.add('d-none'); });
+            document.getElementById('tab-' + btn.dataset.tab).classList.remove('d-none');
+        });
+    });
+
+    // ---- Télécharger la carte (snapshot PNG de la face visible) ----
+    document.getElementById('downloadCardBtn').addEventListener('click', function () {
+        var face = Math.abs(rotation % 360) < 90 || Math.abs(rotation % 360) > 270
+            ? document.querySelector('.flip-front') : document.querySelector('.flip-back');
+        html2canvas(face, { backgroundColor: null, scale: 2 }).then(function (canvas) {
+            var link = document.createElement('a');
+            link.download = 'carte-' + codeApogee + '.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        });
+    });
+});
+</script>
+</body>
+</html>

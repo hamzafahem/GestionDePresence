@@ -1,0 +1,22 @@
+<div class="container">
+<ion-header >
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button color="Primary" (click)="cancel()">Cancel</ion-button>
+    </ion-buttons>
+    <ion-title>Saisir le Code Apogée</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="confirm()"  [strong]="true">Confirm</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content >
+  <ion-card>
+  <ion-item>
+    <ion-label position="stacked"color="">Code Apogée</ion-label>
+    <ion-input [(ngModel)]="name" placeholder="Your name"></ion-input>
+  </ion-item>
+</ion-card>
+</ion-content>
+</div>

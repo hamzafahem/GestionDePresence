@@ -1,0 +1,57 @@
+<ion-header [translucent]="true" class="st-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/hamza" text="" (click)="closemodal()"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      <ion-icon name="settings-outline"></ion-icon>
+      Paramètres
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="st-content">
+  <div class="ion-text-center ion-padding" *ngIf="loading">
+    <ion-spinner></ion-spinner>
+  </div>
+
+  <ng-container *ngIf="!loading">
+    <h3 class="st-section-title">Notifications</h3>
+    <div class="st-card">
+      <div class="st-row">
+        <ion-icon name="mail-outline"></ion-icon>
+        <span>Notifications SMS &amp; Email</span>
+        <ion-toggle [(ngModel)]="smsEmailNotification" (ionChange)="save()"></ion-toggle>
+      </div>
+      <div class="st-row">
+        <ion-icon name="notifications-outline"></ion-icon>
+        <span>Notifications de l'application</span>
+        <ion-toggle [(ngModel)]="appNotification" (ionChange)="save()"></ion-toggle>
+      </div>
+    </div>
+
+    <h3 class="st-section-title">Sécurité</h3>
+    <div class="st-card">
+      <div class="st-row">
+        <ion-icon name="shield-half-outline"></ion-icon>
+        <span>Sécurité renforcée</span>
+        <ion-toggle [(ngModel)]="securityEnabled" (ionChange)="save()"></ion-toggle>
+      </div>
+    </div>
+
+    <h3 class="st-section-title">Compte</h3>
+    <div class="st-card">
+      <div class="st-row">
+        <ion-icon name="person-remove-outline" color="danger"></ion-icon>
+        <span>Désactiver mon compte</span>
+        <ion-toggle color="danger" [(ngModel)]="accountDeactivated" (ionChange)="save()"></ion-toggle>
+      </div>
+    </div>
+    <p class="st-hint" *ngIf="accountDeactivated">
+      <ion-icon name="warning-outline"></ion-icon>
+      Votre compte est marqué comme désactivé. Contactez le CEDoc pour le réactiver.
+    </p>
+
+    <p class="st-version">Version 1.0</p>
+  </ng-container>
+</ion-content>

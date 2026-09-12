@@ -1,0 +1,110 @@
+<ion-header [translucent]="true" class="pf-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/hamza" text="" (click)="closemodal()"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      <ion-icon name="person-outline"></ion-icon>
+      Mon profil
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="pf-content">
+  <div class="ion-text-center ion-padding" *ngIf="loading">
+    <ion-spinner></ion-spinner>
+  </div>
+
+  <!-- Profil Doctorant : lecture seule (géré par l'administration) -->
+  <div *ngIf="!loading && isDoctorant">
+    <div class="pf-avatar-block">
+      <div class="pf-avatar">
+        <img *ngIf="profile.photo" [src]="profile.photo" alt="">
+        <span *ngIf="!profile.photo">{{ (profile.prenom ? profile.prenom[0] : '') }}{{ (profile.nom ? profile.nom[0] : '') }}</span>
+      </div>
+      <h3>{{ profile.prenom }} {{ profile.nom }}</h3>
+      <span class="status-pill" [class.ok]="profile.statut === 'ACTIF'">{{ profile.statut || 'ACTIF' }}</span>
+    </div>
+
+    <div class="pf-card">
+      <div class="pf-row"><ion-icon name="card-outline"></ion-icon><span class="pf-label">Code d'accès</span><span class="pf-value">{{ profile.code_apogee }}</span></div>
+      <div class="pf-row"><ion-icon name="id-card-outline"></ion-icon><span class="pf-label">CIN</span><span class="pf-value">{{ profile.cin || '—' }}</span></div>
+      <div class="pf-row"><ion-icon name="document-text-outline"></ion-icon><span class="pf-label">CNE</span><span class="pf-value">{{ profile.cne || '—' }}</span></div>
+      <div class="pf-row"><ion-icon name="school-outline"></ion-icon><span class="pf-label">Filière</span><span class="pf-value">{{ profile.filiere || '—' }}</span></div>
+      <div class="pf-row"><ion-icon name="mail-outline"></ion-icon><span class="pf-label">Email</span><span class="pf-value">{{ profile.email || '—' }}</span></div>
+      <div class="pf-row"><ion-icon name="flag-outline"></ion-icon><span class="pf-label">Nationalité</span><span class="pf-value">{{ profile.nationalite || 'Marocaine' }}</span></div>
+      <div class="pf-row"><ion-icon name="school"></ion-icon><span class="pf-label">Encadrant</span><span class="pf-value">{{ profile.encadrant_nom_fr || 'Non affecté' }}</span></div>
+    </div>
+
+    <div class="pf-info-box">
+      <ion-icon name="information-circle-outline"></ion-icon>
+      Ces informations sont gérées par l'administration. Contactez le CEDoc pour toute modification.
+    </div>
+  </div>
+
+  <!-- Profil Formateur/Admin : éditable -->
+  <div *ngIf="!loading && !isDoctorant">
+    <div class="pf-avatar-block">
+      <div class="pf-avatar">
+        <img *ngIf="profile.photo" [src]="profile.photo" alt="">
+        <span *ngIf="!profile.photo">{{ (profile.prenom_fr ? profile.prenom_fr[0] : '') }}{{ (profile.nom_fr ? profile.nom_fr[0] : '') }}</span>
+      </div>
+
+      <div class="pf-photo-actions">
+        <input type="file" #photoInput hidden accept="image/*" (change)="onPhotoSelected($event)">
+        <ion-button size="small" fill="outline" [disabled]="uploadingPhoto" (click)="photoInput.click()">
+          <ion-icon slot="start" name="camera-outline"></ion-icon>
+          Changer la photo
+        </ion-button>
+        <ion-button size="small" fill="clear" color="danger" [disabled]="uploadingPhoto" *ngIf="profile.photo" (click)="deletePhoto()">
+          <ion-icon slot="start" name="trash-outline"></ion-icon>
+          Supprimer
+        </ion-button>
+        <ion-spinner *ngIf="uploadingPhoto" name="dots"></ion-spinner>
+      </div>
+
+      <h3>{{ profile.prenom_fr }} {{ profile.nom_fr }}</h3>
+      <p class="pf-role">{{ profile.email }}</p>
+    </div>
+
+    <div class="pf-card pf-card-form">
+      <div class="pf-field">
+        <ion-icon name="id-card-outline"></ion-icon>
+        <div><label>CIN</label><input [value]="profile.cin" readonly></div>
+      </div>
+      <div class="pf-field">
+        <ion-icon name="person-outline"></ion-icon>
+        <div><label>Nom</label><input [(ngModel)]="profile.nom_fr"></div>
+      </div>
+      <div class="pf-field">
+        <ion-icon name="person-outline"></ion-icon>
+        <div><label>Prénom</label><input [(ngModel)]="profile.prenom_fr"></div>
+      </div>
+      <div class="pf-field">
+        <ion-icon name="mail-outline"></ion-icon>
+        <div><label>Email</label><input [(ngModel)]="profile.email" type="email"></div>
+      </div>
+      <div class="pf-field">
+        <ion-icon name="calendar-outline"></ion-icon>
+        <div><label>Âge</label><input [(ngModel)]="profile.age" type="number"></div>
+      </div>
+      <div class="pf-field">
+        <ion-icon name="male-female-outline"></ion-icon>
+        <div><label>Sexe</label><input [(ngModel)]="profile.sexe"></div>
+      </div>
+      <div class="pf-field">
+        <ion-icon name="location-outline"></ion-icon>
+        <div><label>Adresse</label><input [(ngModel)]="profile.address"></div>
+      </div>
+      <div class="pf-field">
+        <ion-icon name="call-outline"></ion-icon>
+        <div><label>Téléphone</label><input [(ngModel)]="profile.phone"></div>
+      </div>
+    </div>
+
+    <button class="pf-save-btn" (click)="save()">
+      <ion-icon name="save-outline"></ion-icon>
+      Enregistrer
+    </button>
+  </div>
+</ion-content>

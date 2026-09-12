@@ -1,0 +1,16 @@
+
+Username  	Password
+8460304196	doctorant123
+2109876543	doctorant123
+7654321098	doctorant123
+
+
+
+
+Username	Password
+formateur1	formateur123	Youssef Bennani
+
+
+
+backoffice   admin   mdp:admin123
+  http://localhost:3333/api/backoffice/login
